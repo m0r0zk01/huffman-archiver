@@ -1,3 +1,2 @@
 add_executable(archiver
-    main.cpp
-        )
+    main.cpp)
