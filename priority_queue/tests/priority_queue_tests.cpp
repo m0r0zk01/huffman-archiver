@@ -3,7 +3,6 @@
 #include <iostream>
 
 #include "../priority_queue.h"
-
 TEST(PriorityQueueTest, TestSize) {
     PriorityQueue<std::pair<double, int>> pq;
     pq.Insert({10.5, 1});
@@ -23,8 +22,8 @@ TEST(PriorityQueueTest, TestSize) {
 TEST(PriorityQueueTest, TestSort) {
     std::vector<int> values;
     PriorityQueue<int> pq;
-    for (size_t i = 0; i < 5; ++i) {
-        int x = rand() % 20;
+    for (size_t i = 0; i < 1000; ++i) {
+        int x = rand();
         pq.Insert(x);
         values.push_back(x);
     }
@@ -37,6 +36,6 @@ TEST(PriorityQueueTest, TestSort) {
 }
 
 int main(int argc, char** argv) {
-    ::testing::InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
