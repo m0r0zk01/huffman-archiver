@@ -1,8 +1,9 @@
+#include "../priority_queue.h"
+
 #include <algorithm>
 #include <gtest/gtest.h>
 #include <iostream>
 
-#include "../priority_queue.h"
 TEST(PriorityQueueTest, TestSize) {
     PriorityQueue<std::pair<double, int>> pq;
     pq.Insert({10.5, 1});

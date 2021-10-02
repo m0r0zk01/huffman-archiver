@@ -1,8 +1,8 @@
+#include "../reader.h"
+
 #include <gtest/gtest.h>
 #include <iostream>
 #include <fstream>
-
-#include "../reader.h"
 
 TEST(ReaderTest, Test1) {
     std::ifstream f("./mock/test1.bin", std::ios::binary);
