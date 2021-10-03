@@ -1,10 +1,14 @@
-//
-// Created by m0r0z on 03.10.2021.
-//
+class Trie {
+public:
+    struct Node {
+        bool is_leaf;
+        Node* _0, *_1;
+    };
 
-#ifndef CPP_PILOT_HSE_TRIE_H
-#define CPP_PILOT_HSE_TRIE_H
+    Node* InsertNode(bool is_leaf, Node*& _0=0, Node*& _1=0);
 
-class trie {};
+    void SetRoot(Node* root);
 
-#endif  // CPP_PILOT_HSE_TRIE_H
+private:
+    Node* root_;
+};
