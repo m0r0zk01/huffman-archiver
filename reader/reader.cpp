@@ -26,3 +26,12 @@ bool Reader::GetNextBit() {
 void Reader::SetInputStream(std::istream& is) {
     input_stream_ = &is;
 }
+
+size_t Reader::GetNBit(size_t num) {
+    size_t result = 0;
+    for (size_t i = 0; i < num; ++i) {
+        result <<= 1;
+        result += GetNextBit();
+    }
+    return result;
+}
