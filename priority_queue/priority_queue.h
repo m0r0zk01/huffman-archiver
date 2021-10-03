@@ -45,13 +45,6 @@ public:
         return Size() == 0;
     }
 
-    void Print() {
-        for (const auto& i : priority_queue_) {
-            std::cout << i << ' ';
-        }
-        std::cout << '\n';
-    }
-
 private:
     void SiftUp() {
         if (Empty()) {
