@@ -11,7 +11,7 @@ public:
     void WriteBit(bool bit);
     void WriteBits(const std::vector<bool>& bits);
     void End();
-    void ChangeOutputStream(std::ostream& os);
+    void SetOutputStream(std::ostream& os);
 
 private:
     std::ostream* output_stream_;
