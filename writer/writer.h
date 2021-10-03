@@ -5,14 +5,16 @@
 
 class Writer {
 public:
-    Writer(std::ostream& ios);
+    Writer();
+    Writer(std::ostream& os);
 
     void WriteBit(bool bit);
     void WriteBits(const std::vector<bool>& bits);
     void End();
+    void ChangeOutputStream(std::ostream& os);
 
 private:
-    std::ostream& output_stream_;
+    std::ostream* output_stream_;
     size_t bits_left_;
     unsigned char last_byte_;
 };
