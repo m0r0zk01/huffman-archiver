@@ -16,15 +16,19 @@ TEST(WriterTest, Test1) {
     writer.WriteBit(0);
     writer.WriteBit(1);
 
-    writer.Close();
+    writer.WriteBit(0);
+    writer.WriteBit(1);
+    writer.WriteBit(1);
+    writer.WriteBit(1);
+    writer.End();
     out.close();
 
     std::ifstream in("./mock/test1.bin");
-
     unsigned char byte;
     in >> byte;
-
     ASSERT_EQ(byte, 97);
+    in >> byte;
+    ASSERT_EQ(byte, 112);
 }
 
 int main(int argc, char** argv) {

@@ -21,7 +21,7 @@ void Writer::WriteBits(const std::vector<bool>& bits) {
     }
 }
 
-void Writer::Close() {
+void Writer::End() {
     if (bits_left_ != CHAR_BIT) {
         output_stream_ << last_byte_;
     }

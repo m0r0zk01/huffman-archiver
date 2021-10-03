@@ -6,7 +6,7 @@
 Reader::Reader(std::istream& is) : current_byte_(0), input_stream_(is), bits_left_(0) {}
 
 bool Reader::ReachedEOF() {
-    if (bits_left_ || input_stream_.eof()) {
+    if (bits_left_) {
         return false;
     } else if (input_stream_ >> current_byte_) {
         bits_left_ = CHAR_BIT;
