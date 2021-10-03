@@ -9,7 +9,7 @@ public:
 
     void WriteBit(bool bit);
     void WriteBits(const std::vector<bool>& bits);
-    void Close();
+    void End();
 
 private:
     std::ostream& output_stream_;

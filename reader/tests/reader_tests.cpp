@@ -8,6 +8,7 @@ TEST(ReaderTest, Test1) {
     std::ifstream f("./mock/test1.bin", std::ios::binary);
     Reader reader(f);
 
+    ASSERT_FALSE(reader.ReachedEOF());
     ASSERT_EQ(reader.GetNextBit(), 0);
     ASSERT_EQ(reader.GetNextBit(), 1);
     ASSERT_EQ(reader.GetNextBit(), 1);
