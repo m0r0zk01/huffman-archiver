@@ -1,5 +1,9 @@
-//
-// Created by m0r0z on 03.10.2021.
-//
-
 #include "trie.h"
+
+Trie::Node* Trie::InsertNode(bool is_leaf, Node*& _0, Node*& _1) {
+    return new Node{.is_leaf=is_leaf, ._0=_0, ._1=_1};
+}
+
+void Trie::SetRoot(Node* root) {
+    root_ = root;
+}
