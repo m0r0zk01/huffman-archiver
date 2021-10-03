@@ -12,6 +12,8 @@ public:
     bool GetNextBit();
     void SetInputStream(std::istream& is);
 
+    size_t GetNBit(size_t num);
+
 private:
     unsigned char current_byte_;
 
