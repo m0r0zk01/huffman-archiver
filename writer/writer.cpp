@@ -28,6 +28,6 @@ void Writer::End() {
     }
 }
 
-void Writer::ChangeOutputStream(std::ostream& os) {
+void Writer::SetOutputStream(std::ostream& os) {
     output_stream_ = &os;
 }
