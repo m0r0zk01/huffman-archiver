@@ -21,5 +21,5 @@ private:
     void DeleteNode(Node* node);
     void RetrieveCodeSizeDFS(std::vector<std::pair<size_t, size_t>>& result, Node* cur_node, size_t cur_code_len);
 
-    Mode* root_;
+    Node* root_;
 };

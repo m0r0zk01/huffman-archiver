@@ -2,6 +2,13 @@
 
 #include <climits>
 
+Reader::Reader() :
+      current_byte_(0),
+      input_stream_(nullptr),
+      has_stream_ownership_(false),
+      bits_left_(0) {}
+
+
 Reader::Reader(std::istream& is) :
       current_byte_(0),
       input_stream_(&is),
@@ -12,6 +19,7 @@ Reader::Reader(std::string_view filename) :
       current_byte_(0),
       input_stream_(new std::ifstream(filename.data())),
       has_stream_ownership_(true),
+      filename_(filename),
       bits_left_(0) {}
 
 Reader::~Reader() {
@@ -38,10 +46,6 @@ bool Reader::GetNextBit() {
     return (current_byte_ >> --bits_left_) % 2;
 }
 
-void Reader::SetInputStream(std::istream& is) {
-    input_stream_ = &is;
-}
-
 size_t Reader::GetNBit(size_t num) {
     size_t result = 0;
     for (size_t i = 0; i < num; ++i) {
@@ -49,4 +53,32 @@ size_t Reader::GetNBit(size_t num) {
         result += GetNextBit();
     }
     return result;
+}
+
+void Reader::SetInputStream(std::istream& is) {
+    if (has_stream_ownership_) {
+        delete input_stream_;
+    }
+    input_stream_ = &is;
+    has_stream_ownership_ = false;
+}
+
+void Reader::SetInputStream(std::string_view filename) {
+    if (has_stream_ownership_) {
+        delete input_stream_;
+    }
+    input_stream_ = new std::ifstream(filename.data());
+    has_stream_ownership_ = true;
+}
+
+std::string Reader::GetFilename() {
+    return filename_;
+}
+
+void Reader::Seekg(size_t pos) {
+    input_stream_->seekg(pos);
+}
+
+void Reader::Clear() {
+    input_stream_->clear();
 }
