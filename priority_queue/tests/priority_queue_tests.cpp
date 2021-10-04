@@ -28,7 +28,7 @@ TEST(PriorityQueueTest, TestSort) {
         pq.Insert(x);
         values.push_back(x);
     }
-    std::sort(values.begin(), values.end());
+    std::sort(values.rbegin(), values.rend());
     while (!values.empty()) {
         ASSERT_TRUE(values.back() == pq.PopFront());
         values.pop_back();

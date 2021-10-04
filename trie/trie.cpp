@@ -23,7 +23,7 @@ void Trie::RetrieveCodeSizeDFS(std::vector<std::pair<size_t, size_t>>& result, N
 
 std::vector<std::pair<size_t, size_t>> Trie::RetrieveCodeSizes() {
     std::vector<std::pair<size_t, size_t>> result;
-    RetrieveCodeSizeDFS(result, root_, 1);
+    RetrieveCodeSizeDFS(result, root_, 0);
     return result;
 }
 
