@@ -1,5 +1,6 @@
 #pragma once
 
+#include <fstream>
 #include <istream>
 #include <memory>
 
@@ -7,6 +8,9 @@ class Reader {
 public:
     Reader();
     Reader(std::istream& is);
+    Reader(std::string_view filename);
+
+    ~Reader();
 
     bool ReachedEOF();
     bool GetNextBit();
@@ -18,5 +22,6 @@ private:
     unsigned char current_byte_;
 
     std::istream* input_stream_;
+    bool has_stream_ownership_;
     size_t bits_left_;
 };

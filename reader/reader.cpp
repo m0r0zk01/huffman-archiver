@@ -1,9 +1,24 @@
-#include <climits>
-#include <iostream>
-
 #include "reader.h"
 
-Reader::Reader(std::istream& is) : current_byte_(0), input_stream_(&is), bits_left_(0) {}
+#include <climits>
+
+Reader::Reader(std::istream& is) :
+      current_byte_(0),
+      input_stream_(&is),
+      has_stream_ownership_(false),
+      bits_left_(0) {}
+
+Reader::Reader(std::string_view filename) :
+      current_byte_(0),
+      input_stream_(new std::ifstream(filename.data())),
+      has_stream_ownership_(true),
+      bits_left_(0) {}
+
+Reader::~Reader() {
+    if (has_stream_ownership_) {
+        delete input_stream_;
+    }
+}
 
 bool Reader::ReachedEOF() {
     if (bits_left_) {
