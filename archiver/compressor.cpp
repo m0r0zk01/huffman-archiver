@@ -1,4 +1,4 @@
-#include "archiver.h"
+#include "compressor.h"
 #include "../priority_queue/priority_queue.h"
 #include "../trie/trie.h"
 
@@ -13,8 +13,13 @@ const int ARCHIVE_END = 258;
 
 Compressor::Compressor() : files_added_(0) {
 }
+
 Compressor::Compressor(std::ostream& os) : files_added_(0) {
     writer_.SetOutputStream(os);
+}
+
+Compressor::Compressor(std::string_view filename) : files_added_(0) {
+    writer_.SetOutputStream(filename);
 }
 
 void Compressor::EncodeFileName() {
@@ -27,14 +32,14 @@ void Compressor::MakeCanonicalHuffmanCode(std::vector<std::pair<size_t, size_t>>
                                           std::unordered_map<size_t, size_t>& cnt_len_code) {
     code_table_.clear();
     size_t code = 0;
-    size_t code_len = codes[0].first;
-
+    size_t prev_len = codes[0].first;
+    std::cout << prev_len << '\n';
     for (const auto& [len, value] : codes) {
+        code <<= (len - prev_len);
         cnt_len_code[len]++;
-        if (len != code_len) {
-            code <<= 1;
-        }
-        code_table_[value] = {code, code_len};
+        std::cout << (unsigned char)value << ": " << ' ' << len << '\n';
+        code_table_[value] = {code, len};
+        prev_len = len;
         code++;
     }
 }
@@ -49,7 +54,7 @@ void Compressor::WriteCodeTableToFile(size_t max_symbol_code_size, std::unordere
 
 void Compressor::AddFile(std::string_view filename) {
     reader_.SetInputStream(filename);
-    std::unordered_map<size_t, size_t> cnt_bytes;
+    std::unordered_map<size_t, size_t> cnt_bytes{{FILENAME_END, 1}, {ONE_MORE_FILE, 1}, {ARCHIVE_END, 1}};
     while (!reader_.ReachedEOF()) {
         unsigned char byte = reader_.GetNBit(8);
         cnt_bytes[byte]++;
@@ -81,6 +86,9 @@ void Compressor::AddFile(std::string_view filename) {
         writer_.WriteNBits(ONE_MORE_FILE, 9);
     }
     writer_.WriteNBits(symbols_count, 9);
+    for (const auto& [len, value] : codes) {
+        writer_.WriteNBits(value, 9);
+    }
     WriteCodeTableToFile(codes.back().first, cnt_len_code);
     EncodeFileName();
     writer_.WriteNBits(code_table_[FILENAME_END].first, code_table_[FILENAME_END].second);
@@ -90,9 +98,9 @@ void Compressor::AddFile(std::string_view filename) {
 
     while (!reader_.ReachedEOF()) {
         unsigned char byte = reader_.GetNBit(8);
-//        std::cout << byte << ": " << code_table_[byte].first << ' ' << code_table_[byte].second << ' ';
+        //        std::cout << byte << ": " << code_table_[byte].first << ' ' << code_table_[byte].second << '\n';
         writer_.WriteNBits(code_table_[byte].first, code_table_[byte].second);
-//        std::cout << '\n';
+        //        std::cout << '\n';
     }
 
     files_added_++;
