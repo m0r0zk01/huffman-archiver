@@ -16,7 +16,9 @@ public:
     void WriteBits(const std::vector<bool>& bits);
     void WriteNBits(size_t bits, size_t amount);
     void End();
+
     void SetOutputStream(std::ostream& os);
+    void SetOutputStream(std::string_view filename);
 
 private:
     std::ostream* output_stream_;

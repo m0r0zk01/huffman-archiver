@@ -5,9 +5,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall")
 
 add_library(WRITER writer.cpp)
 
+# Setup testing
 file(COPY ${CMAKE_SOURCE_DIR}/tests/mock DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 
-# Setup testing
 link_directories(/usr/local/lib)
 
 enable_testing()

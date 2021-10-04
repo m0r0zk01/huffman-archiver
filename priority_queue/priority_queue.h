@@ -54,7 +54,7 @@ private:
         size_t ptr = Size() - 1;
         while (ptr) {
             size_t parent = (ptr - 1) / 2;
-            if (priority_queue_[ptr] > priority_queue_[parent]) {
+            if (priority_queue_[ptr] < priority_queue_[parent]) {
                 std::swap(priority_queue_[ptr], priority_queue_[parent]);
                 ptr = parent;
             } else {
@@ -70,16 +70,16 @@ private:
 
         size_t ptr = 0;
         while (2 * ptr + 1 < Size()) {
-            size_t max_child = 2 * ptr + 1;
-            if (max_child + 1 < Size()) {
-                if (priority_queue_[max_child + 1] > priority_queue_[max_child]) {
-                    max_child++;
+            size_t min_child = 2 * ptr + 1;
+            if (min_child + 1 < Size()) {
+                if (priority_queue_[min_child + 1] < priority_queue_[min_child]) {
+                    min_child++;
                 }
             }
 
-            if (priority_queue_[ptr] < priority_queue_[max_child]) {
-                std::swap(priority_queue_[ptr], priority_queue_[max_child]);
-                ptr = max_child;
+            if (priority_queue_[ptr] > priority_queue_[min_child]) {
+                std::swap(priority_queue_[ptr], priority_queue_[min_child]);
+                ptr = min_child;
             } else {
                 break;
             }

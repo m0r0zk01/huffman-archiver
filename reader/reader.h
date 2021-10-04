@@ -3,6 +3,7 @@
 #include <fstream>
 #include <istream>
 #include <memory>
+#include <string_view>
 
 class Reader {
 public:
@@ -14,14 +15,22 @@ public:
 
     bool ReachedEOF();
     bool GetNextBit();
-    void SetInputStream(std::istream& is);
-
     size_t GetNBit(size_t num);
+
+    void SetInputStream(std::istream& is);
+    void SetInputStream(std::string_view filename);
+
+    std::string GetFilename();
+
+    void Seekg(size_t pos);
+    void Clear();
+
 
 private:
     unsigned char current_byte_;
 
     std::istream* input_stream_;
     bool has_stream_ownership_;
+    std::string filename_;
     size_t bits_left_;
 };

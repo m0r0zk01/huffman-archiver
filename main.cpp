@@ -1,4 +1,4 @@
-#include "archiver.h"
+#include "archiver/archiver.h"
 
 #include <cstring>
 #include <fstream>
@@ -28,9 +28,10 @@ int main(int argc, char** argv) {
         std::string archive_name(argv[2]);
         std::ofstream out(archive_name);
         Compressor compressor(out);
-        for (size_t i = 3; i < argc; ++i) {
-
+        for (size_t i = 3; i < static_cast<size_t>(argc); ++i) {
+            compressor.AddFile(argv[i]);
         }
+        compressor.EndArchive();
         out.close();
     } else if (!strcmp(argv[1], "-d")) {
         if (argc != 3) {

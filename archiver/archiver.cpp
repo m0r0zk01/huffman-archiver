@@ -1,0 +1,103 @@
+#include "archiver.h"
+#include "../priority_queue/priority_queue.h"
+#include "../trie/trie.h"
+
+#include <algorithm>
+#include <bitset>
+#include <climits>
+#include <iostream>
+
+const int FILENAME_END = 256;
+const int ONE_MORE_FILE = 257;
+const int ARCHIVE_END = 258;
+
+Compressor::Compressor() : files_added_(0) {
+}
+Compressor::Compressor(std::ostream& os) : files_added_(0) {
+    writer_.SetOutputStream(os);
+}
+
+void Compressor::EncodeFileName() {
+    for (char c : reader_.GetFilename()) {
+        writer_.WriteNBits(code_table_[c].first, code_table_[c].second);
+    }
+}
+
+void Compressor::MakeCanonicalHuffmanCode(std::vector<std::pair<size_t, size_t>>& codes,
+                                          std::unordered_map<size_t, size_t>& cnt_len_code) {
+    code_table_.clear();
+    size_t code = 0;
+    size_t code_len = codes[0].first;
+
+    for (const auto& [len, value] : codes) {
+        cnt_len_code[len]++;
+        if (len != code_len) {
+            code <<= 1;
+        }
+        code_table_[value] = {code, code_len};
+        code++;
+    }
+}
+
+void Compressor::WriteCodeTableToFile(size_t max_symbol_code_size, std::unordered_map<size_t, size_t>& cnt_len_code) {
+    size_t cur_code_size = 1;
+    while (cur_code_size != max_symbol_code_size) {
+        writer_.WriteNBits(cnt_len_code[cur_code_size], 9);
+        cur_code_size++;
+    }
+}
+
+void Compressor::AddFile(std::string_view filename) {
+    reader_.SetInputStream(filename);
+    std::unordered_map<size_t, size_t> cnt_bytes;
+    while (!reader_.ReachedEOF()) {
+        unsigned char byte = reader_.GetNBit(8);
+        cnt_bytes[byte]++;
+    }
+
+    for (char c : filename) {
+        cnt_bytes[c]++;
+    }
+
+    PriorityQueue<std::pair<size_t, Trie::Node*>> pq;
+    Trie trie;
+    size_t symbols_count = cnt_bytes.size();
+    for (const auto& [byte, cnt] : cnt_bytes) {
+        pq.Insert({cnt, trie.InsertNode(byte, true)});
+    }
+    while (pq.Size() > 1) {
+        auto v1 = pq.PopFront(), v2 = pq.PopFront();
+        pq.Insert({v1.first + v2.first, trie.InsertNode(0, false, v1.second, v2.second)});
+    }
+    trie.SetRoot(pq.PopFront().second);
+
+    auto codes = trie.RetrieveCodeSizes();
+    std::sort(codes.begin(), codes.end());
+    std::unordered_map<size_t, size_t> cnt_len_code;
+
+    MakeCanonicalHuffmanCode(codes, cnt_len_code);
+
+    if (files_added_) {
+        writer_.WriteNBits(ONE_MORE_FILE, 9);
+    }
+    writer_.WriteNBits(symbols_count, 9);
+    WriteCodeTableToFile(codes.back().first, cnt_len_code);
+    EncodeFileName();
+    writer_.WriteNBits(code_table_[FILENAME_END].first, code_table_[FILENAME_END].second);
+
+    reader_.Clear();
+    reader_.Seekg(0);
+
+    while (!reader_.ReachedEOF()) {
+        unsigned char byte = reader_.GetNBit(8);
+//        std::cout << byte << ": " << code_table_[byte].first << ' ' << code_table_[byte].second << ' ';
+        writer_.WriteNBits(code_table_[byte].first, code_table_[byte].second);
+//        std::cout << '\n';
+    }
+
+    files_added_++;
+}
+
+void Compressor::EndArchive() {
+    writer_.WriteNBits(code_table_[ARCHIVE_END].first, code_table_[ARCHIVE_END].second);
+}
