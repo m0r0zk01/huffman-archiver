@@ -1,10 +1,24 @@
 #include "writer.h"
 
 #include <climits>
-#include <iostream>
 
 Writer::Writer(std::ostream& os) :
-      output_stream_(&os), bits_left_(CHAR_BIT), last_byte_(0) {}
+      output_stream_(&os),
+      has_stream_ownership_(false),
+      bits_left_(CHAR_BIT),
+      last_byte_(0) {}
+
+Writer::Writer(std::string_view filename) :
+      output_stream_(new std::ofstream(filename.data())),
+      has_stream_ownership_(true),
+      bits_left_(CHAR_BIT),
+      last_byte_(0) {}
+
+Writer::~Writer() {
+    if (has_stream_ownership_) {
+        delete output_stream_;
+    }
+}
 
 void Writer::WriteBit(bool bit) {
     if (!bits_left_) {
@@ -30,4 +44,10 @@ void Writer::End() {
 
 void Writer::SetOutputStream(std::ostream& os) {
     output_stream_ = &os;
+}
+
+void Writer::WriteNBits(size_t bits, size_t amount) {
+    for (size_t i = 0; i < amount; ++i) {
+        WriteBit((bits << (amount - i - 1)) % 2);
+    }
 }
