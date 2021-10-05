@@ -46,7 +46,6 @@ void Writer::WriteBits(const std::vector<bool>& bits) {
 
 void Writer::WriteNBits(size_t bits, size_t amount) {
     for (size_t i = 0; i < amount; ++i) {
-//        std::cout << (bits >> (amount - i - 1)) % 2;
         WriteBit((bits >> (amount - i - 1)) % 2);
     }
 }

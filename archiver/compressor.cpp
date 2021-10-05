@@ -32,7 +32,7 @@ void Compressor::MakeCanonicalHuffmanCode(std::vector<std::pair<size_t, size_t>>
         code <<= (len - prev_len);
         cnt_len_code[len]++;
         code_table_[value] = {code, len};
-        std::cout << (unsigned char)value << ": " << code << ' ' << len << '\n';
+//        std::cout << (unsigned char)value << ": " << value << ' ' << code << ' ' << len << '\n';
         prev_len = len;
         code++;
     }
@@ -45,6 +45,10 @@ void Compressor::WriteCodeTableToFile(size_t max_symbol_code_size, std::unordere
 }
 
 void Compressor::AddFile(std::string_view filename) {
+    if (files_added_) {
+        writer_.WriteNBits(code_table_[ONE_MORE_FILE].first, code_table_[ONE_MORE_FILE].second);
+    }
+
     reader_.SetInputStream(filename);
     std::unordered_map<size_t, size_t> cnt_bytes{{FILENAME_END, 1}, {ONE_MORE_FILE, 1}, {ARCHIVE_END, 1}};
     while (!reader_.ReachedEOF()) {
@@ -74,11 +78,10 @@ void Compressor::AddFile(std::string_view filename) {
 
     MakeCanonicalHuffmanCode(codes, cnt_len_code);
 
-    if (files_added_) {
-        writer_.WriteNBits(ONE_MORE_FILE, 9);
-    }
+//    std::cout << symbols_count << " symbs\n";
     writer_.WriteNBits(symbols_count, 9);
     for (const auto& [len, value] : codes) {
+//        std::cout << value << '\n';
         writer_.WriteNBits(value, 9);
     }
     WriteCodeTableToFile(codes.back().first, cnt_len_code);
