@@ -2,7 +2,6 @@
 #include "archiver/decompressor.h"
 
 #include <cstring>
-#include <fstream>
 #include <iostream>
 
 void PrintHelp() {
@@ -27,13 +26,13 @@ int main(int argc, char** argv) {
         }
 
         std::string archive_name(argv[2]);
-        std::ofstream out(archive_name);
-        Compressor compressor(out);
+        Writer writer(archive_name);
+        Compressor compressor(&writer);
         for (size_t i = 3; i < static_cast<size_t>(argc); ++i) {
-            compressor.AddFile(argv[i]);
+            Reader reader(argv[i]);
+            compressor.AddFile(&reader);
         }
         compressor.EndArchive();
-        out.close();
     } else if (!strcmp(argv[1], "-d")) {
         if (argc != 3) {
             std::cout << "Wrong amount of arguments passed. Use 'archiver -h' to see help\n";
@@ -41,10 +40,9 @@ int main(int argc, char** argv) {
         }
 
         std::string archive_name(argv[2]);
-        std::ifstream in(archive_name);
-        Decompressor decompressor(in);
+        Reader reader(archive_name);
+        Decompressor decompressor(&reader);
         decompressor.Decompress();
-        in.close();
     } else {
         std::cout << "Unknown command: " << argv[1] << '\n';
         return 1;

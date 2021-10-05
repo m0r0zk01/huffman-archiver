@@ -5,10 +5,9 @@
 class Compressor : Archiver {
 public:
     Compressor() = delete;
-    explicit Compressor(std::ostream& os);
-    explicit Compressor(std::string_view filename);
+    explicit Compressor(Writer* writer);
 
-    void AddFile(const std::string_view filename);
+    void AddFile(Reader* reader);
     void EndArchive();
 
 private:
@@ -21,5 +20,5 @@ private:
     void MakeCanonicalHuffmanCode(const std::vector<std::pair<size_t, size_t>>& codes,
                                   std::unordered_map<size_t, size_t>& cnt_len_code);
     void WriteCodeTableToFile(size_t max_symbol_code_size,
-                              const std::unordered_map<size_t, size_t>& cnt_len_code);
+                              std::unordered_map<size_t, size_t>& cnt_len_code);
 };
