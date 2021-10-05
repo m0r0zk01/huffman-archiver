@@ -7,7 +7,6 @@
 
 class Reader {
 public:
-    Reader();
     Reader(std::istream& is);
     Reader(std::string_view filename);
 
@@ -27,9 +26,9 @@ public:
 
 
 private:
-    std::istream* input_stream_;
+    std::istream* input_stream_ = nullptr;
     unsigned char current_byte_ = 0;
-    bool has_stream_ownership_;
+    bool has_stream_ownership_ = false;
     std::string filename_;
     size_t bits_left_ = 0;
 };

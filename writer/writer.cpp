@@ -2,10 +2,6 @@
 
 #include <iostream>
 
-Writer::Writer() :
-      output_stream_(nullptr),
-      has_stream_ownership_(false) {}
-
 Writer::Writer(std::ostream& os) :
       output_stream_(&os),
       has_stream_ownership_(false) {}
@@ -22,6 +18,9 @@ Writer::~Writer() {
 }
 
 void Writer::WriteBit(bool bit) {
+    if (!output_stream_) {
+        throw "No output file is open";
+    }
     if (!bits_left_) {
         output_stream_->put(last_byte_);
         last_byte_ = 0;
@@ -44,6 +43,9 @@ void Writer::WriteNBits(size_t bits, size_t amount) {
 }
 
 void Writer::End() {
+    if (!output_stream_) {
+        throw "No output file is open";
+    }
     if (bits_left_ != CHAR_BIT) {
         output_stream_->put(last_byte_);
         bits_left_ = CHAR_BIT;
