@@ -7,7 +7,7 @@ add_library(COMPRESSOR compressor.cpp)
 add_library(DECOMPRESSOR compressor.cpp)
 
 # Setup testing
-file(COPY ${CMAKE_SOURCE_DIR}/tests/mock DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/tests/mock DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 
 link_directories(/usr/local/lib)
 

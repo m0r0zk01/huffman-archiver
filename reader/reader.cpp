@@ -3,24 +3,18 @@
 #include <climits>
 
 Reader::Reader() :
-      current_byte_(0),
       input_stream_(nullptr),
-      has_stream_ownership_(false),
-      bits_left_(0) {}
+      has_stream_ownership_(false) {}
 
 
 Reader::Reader(std::istream& is) :
-      current_byte_(0),
       input_stream_(&is),
-      has_stream_ownership_(false),
-      bits_left_(0) {}
+      has_stream_ownership_(false) {}
 
 Reader::Reader(std::string_view filename) :
-      current_byte_(0),
       input_stream_(new std::ifstream(filename.data())),
       has_stream_ownership_(true),
-      filename_(filename),
-      bits_left_(0) {}
+      filename_(filename) {}
 
 Reader::~Reader() {
     if (has_stream_ownership_) {

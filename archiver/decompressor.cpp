@@ -2,8 +2,6 @@
 
 #include <unordered_map>
 
-Decompressor::Decompressor() {}
-
 Decompressor::Decompressor(std::istream& is) {
     reader_.SetInputStream(is);
 }

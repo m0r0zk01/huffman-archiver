@@ -4,7 +4,7 @@
 
 class Compressor : Archiver {
 public:
-    Compressor();
+    Compressor() = delete;
     Compressor(std::ostream& os);
     Compressor(std::string_view filename);
 
@@ -12,7 +12,7 @@ public:
     void EndArchive();
 
 private:
-    size_t files_added_;
+    size_t files_added_ = 0;
 
     using CodeTable = std::unordered_map<size_t, std::pair<size_t, size_t>>;
     CodeTable code_table_;
