@@ -1,4 +1,4 @@
-#include "compressor.h"
+#include "decompressor.h"
 
 #include <unordered_map>
 
