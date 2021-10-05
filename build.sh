@@ -1,9 +1,8 @@
 #!/bin/bash
 
-# shellcheck disable=SC2164
-mkdir -p build && cd build
-# shellcheck disable=SC2035
-rm -rf *
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make
-cp archiver.sh ..
+mkdir -p "build" || { echo "Can't create directory"; exit 1; }
+cd build || { echo "Can't change directory"; exit 1; }
+rm -rf ./* || { echo "Can't clear ./build directory"; exit 1; }
+cmake -DCMAKE_BUILD_TYPE=Release .. || { echo "CMake error"; exit 1; }
+make || { echo "Make error"; exit 1; }
+cp archiver.sh .. || { echo "Can't copy archiver.sh to current folder. Copy it manually from ./build"; exit 1; }
