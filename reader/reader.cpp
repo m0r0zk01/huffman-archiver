@@ -2,11 +2,6 @@
 
 #include <climits>
 
-Reader::Reader() :
-      input_stream_(nullptr),
-      has_stream_ownership_(false) {}
-
-
 Reader::Reader(std::istream& is) :
       input_stream_(&is),
       has_stream_ownership_(false) {}
@@ -23,6 +18,9 @@ Reader::~Reader() {
 }
 
 bool Reader::ReachedEOF() {
+    if (!input_stream_) {
+        throw "No input file is open";
+    }
     if (bits_left_) {
         return false;
     }

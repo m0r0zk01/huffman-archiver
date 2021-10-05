@@ -7,7 +7,6 @@
 
 class Writer {
 public:
-    Writer();
     Writer(std::ostream& os);
     Writer(std::string_view filename);
 
@@ -22,8 +21,8 @@ public:
     void SetOutputStream(std::string_view filename);
 
 private:
-    std::ostream* output_stream_;
-    bool has_stream_ownership_;
+    std::ostream* output_stream_ = nullptr;
+    bool has_stream_ownership_ = false;
     size_t bits_left_ = CHAR_BIT;
     unsigned char last_byte_ = 0;
 };
