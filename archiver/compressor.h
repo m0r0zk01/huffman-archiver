@@ -8,7 +8,7 @@ public:
     Compressor(std::ostream& os);
     Compressor(std::string_view filename);
 
-    void AddFile(std::string_view filename);
+    void AddFile(const std::string_view filename);
     void EndArchive();
 
 private:
@@ -18,7 +18,8 @@ private:
     CodeTable code_table_;
 
     void EncodeFileName();
-    void MakeCanonicalHuffmanCode(std::vector<std::pair<size_t, size_t>>& codes,
+    void MakeCanonicalHuffmanCode(const std::vector<std::pair<size_t, size_t>>& codes,
                                   std::unordered_map<size_t, size_t>& cnt_len_code);
-    void WriteCodeTableToFile(size_t max_symbol_code_size, std::unordered_map<size_t, size_t>& cnt_len_code);
+    void WriteCodeTableToFile(size_t max_symbol_code_size,
+                              const std::unordered_map<size_t, size_t>& cnt_len_code);
 };
