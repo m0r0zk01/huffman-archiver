@@ -6,7 +6,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall")
 add_library(READER reader.cpp)
 
 # Setup testing
-file(COPY ${CMAKE_SOURCE_DIR}/tests/mock DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/tests/mock DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 
 link_directories(/usr/local/lib)
 
@@ -14,7 +14,7 @@ enable_testing()
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIR})
 
-add_custom_target(tests COMMAND GTEST_COLOR=yes ${CMAKE_CTEST_COMMAND} --verbose)
+add_custom_target(reader_tests COMMAND GTEST_COLOR=yes ${CMAKE_CTEST_COMMAND} --verbose)
 
 file(GLOB TEST_FILES "tests/*.cpp")
 add_executable("reader_tests" EXCLUDE_FROM_ALL ${TEST_FILES})

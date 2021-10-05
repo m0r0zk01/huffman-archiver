@@ -6,9 +6,6 @@
 #include <climits>
 #include <iostream>
 
-Compressor::Compressor() : files_added_(0) {
-}
-
 Compressor::Compressor(std::ostream& os) : files_added_(0) {
     writer_.SetOutputStream(os);
 }

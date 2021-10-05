@@ -1,25 +1,18 @@
 #include "writer.h"
 
-#include <climits>
 #include <iostream>
 
 Writer::Writer() :
       output_stream_(nullptr),
-      has_stream_ownership_(false),
-      bits_left_(CHAR_BIT),
-      last_byte_(0) {}
+      has_stream_ownership_(false) {}
 
 Writer::Writer(std::ostream& os) :
       output_stream_(&os),
-      has_stream_ownership_(false),
-      bits_left_(CHAR_BIT),
-      last_byte_(0) {}
+      has_stream_ownership_(false) {}
 
 Writer::Writer(std::string_view filename) :
       output_stream_(new std::ofstream(filename.data())),
-      has_stream_ownership_(true),
-      bits_left_(CHAR_BIT),
-      last_byte_(0) {}
+      has_stream_ownership_(true) {}
 
 Writer::~Writer() {
     End();

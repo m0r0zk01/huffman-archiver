@@ -27,10 +27,9 @@ public:
 
 
 private:
-    unsigned char current_byte_;
-
     std::istream* input_stream_;
+    unsigned char current_byte_ = 0;
     bool has_stream_ownership_;
     std::string filename_;
-    size_t bits_left_;
+    size_t bits_left_ = 0;
 };

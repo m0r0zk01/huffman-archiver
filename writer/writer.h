@@ -1,5 +1,6 @@
 #pragma once
 
+#include <climits>
 #include <fstream>
 #include <istream>
 #include <vector>
@@ -23,6 +24,6 @@ public:
 private:
     std::ostream* output_stream_;
     bool has_stream_ownership_;
-    size_t bits_left_;
-    unsigned char last_byte_;
+    size_t bits_left_ = CHAR_BIT;
+    unsigned char last_byte_ = 0;
 };
