@@ -7,6 +7,7 @@
 
 class Writer {
 public:
+    Writer() = default;
     explicit Writer(std::ostream& os);
     explicit Writer(std::string_view filename);
 
