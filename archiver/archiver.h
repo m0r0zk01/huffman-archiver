@@ -8,12 +8,11 @@
 #include <string>
 #include <unordered_map>
 
-const int FILENAME_END = 256;
-const int ONE_MORE_FILE = 257;
-const int ARCHIVE_END = 258;
-
 class Archiver {
 public:
+    const int FILENAME_END = 256;
+    const int ONE_MORE_FILE = 257;
+    const int ARCHIVE_END = 258;
 
 protected:
     Reader reader_;
