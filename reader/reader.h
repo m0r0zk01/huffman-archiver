@@ -7,8 +7,8 @@
 
 class Reader {
 public:
-    Reader(std::istream& is);
-    Reader(std::string_view filename);
+    explicit Reader(std::istream& is);
+    explicit Reader(std::string_view filename);
 
     ~Reader();
 

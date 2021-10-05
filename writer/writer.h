@@ -7,8 +7,8 @@
 
 class Writer {
 public:
-    Writer(std::ostream& os);
-    Writer(std::string_view filename);
+    explicit Writer(std::ostream& os);
+    explicit Writer(std::string_view filename);
 
     ~Writer();
 
