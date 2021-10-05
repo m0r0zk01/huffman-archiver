@@ -19,3 +19,6 @@ The program uses Huffman algorithm to compress/decompress given files
 ./archiver.sh -d archive_name - разархивировать файлы из архива archive_name в текущую директорию
 ./archiver.sh -h - вывести справку по использованию программы(данное сообщение)
 ```
+
+## Benchmarks
+

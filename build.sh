@@ -4,6 +4,6 @@
 mkdir -p build && cd build
 # shellcheck disable=SC2035
 rm -rf *
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 cp archiver.sh ..
