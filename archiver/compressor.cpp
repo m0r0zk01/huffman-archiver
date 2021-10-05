@@ -3,20 +3,13 @@
 
 #include <algorithm>
 #include <bitset>
-#include <climits>
 #include <iostream>
 
-Compressor::Compressor(std::ostream& os) {
-    writer_.SetOutputStream(os);
-}
-
-Compressor::Compressor(std::string_view filename) {
-    writer_.SetOutputStream(filename);
-}
+Compressor::Compressor(Writer* writer) : Archiver(nullptr, writer) {}
 
 void Compressor::EncodeFileName() {
-    for (char c : reader_.GetFilename()) {
-        writer_.WriteNBits(code_table_[c].first, code_table_[c].second);
+    for (char c : reader_->GetFilename()) {
+        writer_->WriteNBits(code_table_[c].first, code_table_[c].second);
     }
 }
 
@@ -35,25 +28,25 @@ void Compressor::MakeCanonicalHuffmanCode(const std::vector<std::pair<size_t, si
 }
 
 void Compressor::WriteCodeTableToFile(size_t max_symbol_code_size,
-                                      const std::unordered_map<size_t, size_t>& cnt_len_code) {
+                                      std::unordered_map<size_t, size_t>& cnt_len_code) {
     for (size_t code_size = 1; code_size <= max_symbol_code_size; ++code_size) {
-        writer_.WriteNBits(cnt_len_code.at(code_size), 9);
+        writer_->WriteNBits(cnt_len_code[code_size], 9);
     }
 }
 
-void Compressor::AddFile(const std::string_view filename) {
+void Compressor::AddFile(Reader* reader) {
     if (files_added_) {
-        writer_.WriteNBits(code_table_[ONE_MORE_FILE].first, code_table_[ONE_MORE_FILE].second);
+        writer_->WriteNBits(code_table_[ONE_MORE_FILE].first, code_table_[ONE_MORE_FILE].second);
     }
 
-    reader_.SetInputStream(filename);
+    reader_ = reader;
     std::unordered_map<size_t, size_t> cnt_bytes{{FILENAME_END, 1}, {ONE_MORE_FILE, 1}, {ARCHIVE_END, 1}};
-    while (!reader_.ReachedEOF()) {
-        unsigned char byte = reader_.GetNBit(8);
+    while (!reader_->ReachedEOF()) {
+        unsigned char byte = reader_->GetNBit(8);
         cnt_bytes[byte]++;
     }
 
-    for (char c : filename) {
+    for (char c : reader_->GetFilename()) {
         cnt_bytes[c]++;
     }
 
@@ -74,26 +67,26 @@ void Compressor::AddFile(const std::string_view filename) {
     std::unordered_map<size_t, size_t> cnt_len_code;
 
     MakeCanonicalHuffmanCode(codes, cnt_len_code);
-    writer_.WriteNBits(symbols_count, 9);
+    writer_->WriteNBits(symbols_count, 9);
     for (const auto& [len, value] : codes) {
-        writer_.WriteNBits(value, 9);
+        writer_->WriteNBits(value, 9);
     }
     WriteCodeTableToFile(codes.back().first, cnt_len_code);
     EncodeFileName();
-    writer_.WriteNBits(code_table_[FILENAME_END].first, code_table_[FILENAME_END].second);
+    writer_->WriteNBits(code_table_[FILENAME_END].first, code_table_[FILENAME_END].second);
 
-    reader_.Clear();
-    reader_.Seekg(0);
+    reader_->Clear();
+    reader_->Seekg(0);
 
-    while (!reader_.ReachedEOF()) {
-        unsigned char byte = reader_.GetNBit(8);
-        writer_.WriteNBits(code_table_[byte].first, code_table_[byte].second);
+    while (!reader_->ReachedEOF()) {
+        unsigned char byte = reader_->GetNBit(8);
+        writer_->WriteNBits(code_table_[byte].first, code_table_[byte].second);
     }
 
     files_added_++;
 }
 
 void Compressor::EndArchive() {
-    writer_.WriteNBits(code_table_[ARCHIVE_END].first, code_table_[ARCHIVE_END].second);
-    writer_.End();
+    writer_->WriteNBits(code_table_[ARCHIVE_END].first, code_table_[ARCHIVE_END].second);
+    writer_->End();
 }

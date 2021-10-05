@@ -5,8 +5,7 @@
 class Decompressor : public Archiver {
 public:
     Decompressor() = delete;
-    explicit Decompressor(std::istream& is);
-    explicit Decompressor(std::string_view filename);
+    explicit Decompressor(Reader* reader);
 
     void Decompress();
 

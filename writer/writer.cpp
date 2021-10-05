@@ -60,8 +60,7 @@ void Writer::SetOutputStream(std::ostream& os) {
     has_stream_ownership_ = false;
 }
 
-void Writer::SetOutputStream(std::string_view filename) {
-    if (has_stream_ownership_) {
+void Writer::SetOutputStream(std::string_view filename) {if (has_stream_ownership_) {
         delete output_stream_;
     }
     output_stream_ = new std::ofstream(filename.data());

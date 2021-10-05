@@ -15,6 +15,8 @@ public:
     const int ARCHIVE_END = 258;
 
 protected:
-    Reader reader_;
-    Writer writer_;
+    Reader* reader_ = nullptr;
+    Writer* writer_ = nullptr;
+
+    Archiver(Reader* reader, Writer* writer) : reader_(reader), writer_(writer) {}
 };

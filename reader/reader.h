@@ -25,7 +25,6 @@ public:
     void Seekg(size_t pos);
     void Clear();
 
-
 private:
     std::istream* input_stream_ = nullptr;
     unsigned char current_byte_ = 0;
