@@ -1,4 +1,5 @@
 #include "archiver/compressor.h"
+#include "archiver/decompressor.h"
 
 #include <cstring>
 #include <fstream>
