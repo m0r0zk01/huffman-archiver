@@ -5,7 +5,7 @@
 template <typename T>
 class PriorityQueue {
 public:
-    PriorityQueue(const std::vector<T>& elements) {
+    explicit PriorityQueue(const std::vector<T>& elements) {
         for (const auto& element : elements) {
             Insert(element);
         }

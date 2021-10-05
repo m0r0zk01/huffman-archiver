@@ -5,8 +5,8 @@
 class Compressor : Archiver {
 public:
     Compressor() = delete;
-    Compressor(std::ostream& os);
-    Compressor(std::string_view filename);
+    explicit Compressor(std::ostream& os);
+    explicit Compressor(std::string_view filename);
 
     void AddFile(const std::string_view filename);
     void EndArchive();
