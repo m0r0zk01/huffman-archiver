@@ -10,16 +10,16 @@ Decompressor::Decompressor(std::string_view filename) {
     reader_.SetInputStream(filename);
 }
 
-void Decompressor::RetrieveTrie(std::vector<size_t>& values,
-                                     std::unordered_map<size_t, size_t>& cnt_len_code) {
+void Decompressor::InitTrie(const std::vector<size_t>& values,
+                            const std::unordered_map<size_t, size_t>& cnt_len_code) {
     size_t code = 0;
     size_t code_len = 1;
-    size_t codes_with_current_len_left = cnt_len_code[1];
+    size_t codes_with_current_len_left = cnt_len_code.at(1);
     size_t codes_retrieved = 0;
     while (codes_retrieved != values.size()) {
         while (!codes_with_current_len_left) {
             code_len++;
-            codes_with_current_len_left = cnt_len_code[code_len];
+            codes_with_current_len_left = cnt_len_code.at(code_len);
             code <<= 1;
         }
         trie_.AddCode(values[codes_retrieved], code, code_len);
@@ -70,7 +70,7 @@ bool Decompressor::DecompressNextFile() {
 
     trie_ = Trie();
     trie_.SetRoot(new Trie::Node);
-    RetrieveTrie(values, cnt_len_code);
+    InitTrie(values, cnt_len_code);
 
     std::string filename = RetrieveFilename();
     writer_.SetOutputStream(filename);

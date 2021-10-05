@@ -20,7 +20,7 @@ void Compressor::EncodeFileName() {
     }
 }
 
-void Compressor::MakeCanonicalHuffmanCode(std::vector<std::pair<size_t, size_t>>& codes,
+void Compressor::MakeCanonicalHuffmanCode(const std::vector<std::pair<size_t, size_t>>& codes,
                                           std::unordered_map<size_t, size_t>& cnt_len_code) {
     code_table_.clear();
     size_t code = 0;
@@ -34,13 +34,14 @@ void Compressor::MakeCanonicalHuffmanCode(std::vector<std::pair<size_t, size_t>>
     }
 }
 
-void Compressor::WriteCodeTableToFile(size_t max_symbol_code_size, std::unordered_map<size_t, size_t>& cnt_len_code) {
+void Compressor::WriteCodeTableToFile(size_t max_symbol_code_size,
+                                      const std::unordered_map<size_t, size_t>& cnt_len_code) {
     for (size_t code_size = 1; code_size <= max_symbol_code_size; ++code_size) {
-        writer_.WriteNBits(cnt_len_code[code_size], 9);
+        writer_.WriteNBits(cnt_len_code.at(code_size), 9);
     }
 }
 
-void Compressor::AddFile(std::string_view filename) {
+void Compressor::AddFile(const std::string_view filename) {
     if (files_added_) {
         writer_.WriteNBits(code_table_[ONE_MORE_FILE].first, code_table_[ONE_MORE_FILE].second);
     }
