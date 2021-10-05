@@ -3,14 +3,14 @@ project(archiver)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall")
 
-add_executable(MAIN main.cpp)
+add_executable(archiver.sh main.cpp)
 
 add_library(ARCHIVER archiver/compressor.cpp archiver/decompressor.cpp)
 add_library(READER reader/reader.cpp)
 add_library(WRITER writer/writer.cpp)
 add_library(TRIE trie/trie.cpp)
 
-target_link_libraries(MAIN ARCHIVER READER WRITER TRIE)
+target_link_libraries(archiver.sh ARCHIVER READER WRITER TRIE)
 
 ## Setup testing
 #link_directories(/usr/local/lib)
