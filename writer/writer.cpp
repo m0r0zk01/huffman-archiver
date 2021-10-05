@@ -6,7 +6,7 @@
 Writer::Writer() :
       output_stream_(nullptr),
       has_stream_ownership_(false),
-      bits_left_(0),
+      bits_left_(CHAR_BIT),
       last_byte_(0) {}
 
 Writer::Writer(std::ostream& os) :
@@ -22,6 +22,7 @@ Writer::Writer(std::string_view filename) :
       last_byte_(0) {}
 
 Writer::~Writer() {
+    End();
     if (has_stream_ownership_) {
         delete output_stream_;
     }
@@ -29,7 +30,7 @@ Writer::~Writer() {
 
 void Writer::WriteBit(bool bit) {
     if (!bits_left_) {
-        *output_stream_ << last_byte_;
+        output_stream_->put(last_byte_);
         last_byte_ = 0;
         bits_left_ = CHAR_BIT;
     }
@@ -45,14 +46,15 @@ void Writer::WriteBits(const std::vector<bool>& bits) {
 
 void Writer::WriteNBits(size_t bits, size_t amount) {
     for (size_t i = 0; i < amount; ++i) {
+//        std::cout << (bits >> (amount - i - 1)) % 2;
         WriteBit((bits >> (amount - i - 1)) % 2);
     }
 }
 
-
 void Writer::End() {
     if (bits_left_ != CHAR_BIT) {
-        *output_stream_ << last_byte_;
+        output_stream_->put(last_byte_);
+        bits_left_ = CHAR_BIT;
     }
 }
 

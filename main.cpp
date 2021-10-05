@@ -40,7 +40,10 @@ int main(int argc, char** argv) {
         }
 
         std::string archive_name(argv[2]);
-        Archiver Decompressor;
+        std::ifstream in(archive_name);
+        Decompressor decompressor(in);
+        decompressor.Decompress();
+        in.close();
     } else {
         std::cout << "Unknown command: " << argv[1] << '\n';
         return 1;

@@ -2,9 +2,15 @@
 
 #include "../reader/reader.h"
 #include "../writer/writer.h"
+#include "../trie/trie.h"
 
+#include <iostream>
 #include <string>
 #include <unordered_map>
+
+const int FILENAME_END = 256;
+const int ONE_MORE_FILE = 257;
+const int ARCHIVE_END = 258;
 
 class Archiver {
 public:
@@ -45,4 +51,11 @@ public:
 
 private:
     bool DecompressNextFile();
+    void RetrieveTrie(std::vector<size_t>& values,
+                      std::unordered_map<size_t, size_t>& cnt_len_code);
+    void CountCodeLens(size_t symbols_count, std::unordered_map<size_t, size_t>& cnt_len_code);
+    size_t GetNextSymbol();
+    std::string RetrieveFilename();
+
+    Trie trie_;
 };

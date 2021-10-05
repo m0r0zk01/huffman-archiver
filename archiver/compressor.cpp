@@ -1,15 +1,10 @@
 #include "compressor.h"
 #include "../priority_queue/priority_queue.h"
-#include "../trie/trie.h"
 
 #include <algorithm>
 #include <bitset>
 #include <climits>
 #include <iostream>
-
-const int FILENAME_END = 256;
-const int ONE_MORE_FILE = 257;
-const int ARCHIVE_END = 258;
 
 Compressor::Compressor() : files_added_(0) {
 }
@@ -33,22 +28,19 @@ void Compressor::MakeCanonicalHuffmanCode(std::vector<std::pair<size_t, size_t>>
     code_table_.clear();
     size_t code = 0;
     size_t prev_len = codes[0].first;
-    std::cout << prev_len << '\n';
     for (const auto& [len, value] : codes) {
         code <<= (len - prev_len);
         cnt_len_code[len]++;
-        std::cout << (unsigned char)value << ": " << ' ' << len << '\n';
         code_table_[value] = {code, len};
+        std::cout << (unsigned char)value << ": " << code << ' ' << len << '\n';
         prev_len = len;
         code++;
     }
 }
 
 void Compressor::WriteCodeTableToFile(size_t max_symbol_code_size, std::unordered_map<size_t, size_t>& cnt_len_code) {
-    size_t cur_code_size = 1;
-    while (cur_code_size != max_symbol_code_size) {
-        writer_.WriteNBits(cnt_len_code[cur_code_size], 9);
-        cur_code_size++;
+    for (size_t code_size = 1; code_size <= max_symbol_code_size; ++code_size) {
+        writer_.WriteNBits(cnt_len_code[code_size], 9);
     }
 }
 
@@ -98,9 +90,9 @@ void Compressor::AddFile(std::string_view filename) {
 
     while (!reader_.ReachedEOF()) {
         unsigned char byte = reader_.GetNBit(8);
-        //        std::cout << byte << ": " << code_table_[byte].first << ' ' << code_table_[byte].second << '\n';
+//        std::cout << byte << ": " << code_table_[byte].first << ' ' << code_table_[byte].second << '\n';
         writer_.WriteNBits(code_table_[byte].first, code_table_[byte].second);
-        //        std::cout << '\n';
+//        std::cout << '\n';
     }
 
     files_added_++;
@@ -108,4 +100,5 @@ void Compressor::AddFile(std::string_view filename) {
 
 void Compressor::EndArchive() {
     writer_.WriteNBits(code_table_[ARCHIVE_END].first, code_table_[ARCHIVE_END].second);
+    writer_.End();
 }
