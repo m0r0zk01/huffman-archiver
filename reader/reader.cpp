@@ -31,8 +31,11 @@ Reader::~Reader() {
 bool Reader::ReachedEOF() {
     if (bits_left_) {
         return false;
-    } else if (*input_stream_ >> current_byte_) {
+    }
+    char tmp;
+    if (input_stream_->get(tmp)) {
         bits_left_ = CHAR_BIT;
+        current_byte_ = static_cast<unsigned char>(tmp);
         return false;
     }
     return true;
@@ -46,9 +49,9 @@ bool Reader::GetNextBit() {
     return (current_byte_ >> --bits_left_) % 2;
 }
 
-size_t Reader::GetNBit(size_t num) {
+size_t Reader::GetNBit(size_t amount) {
     size_t result = 0;
-    for (size_t i = 0; i < num; ++i) {
+    for (size_t i = 0; i < amount; ++i) {
         result <<= 1;
         result += GetNextBit();
     }
@@ -61,6 +64,7 @@ void Reader::SetInputStream(std::istream& is) {
     }
     input_stream_ = &is;
     has_stream_ownership_ = false;
+    filename_.clear();
 }
 
 void Reader::SetInputStream(std::string_view filename) {
@@ -69,6 +73,7 @@ void Reader::SetInputStream(std::string_view filename) {
     }
     input_stream_ = new std::ifstream(filename.data());
     has_stream_ownership_ = true;
+    filename_ = filename;
 }
 
 std::string Reader::GetFilename() {
