@@ -6,11 +6,11 @@
 #include <climits>
 #include <iostream>
 
-Compressor::Compressor(std::ostream& os) : files_added_(0) {
+Compressor::Compressor(std::ostream& os) : {
     writer_.SetOutputStream(os);
 }
 
-Compressor::Compressor(std::string_view filename) : files_added_(0) {
+Compressor::Compressor(std::string_view filename) : {
     writer_.SetOutputStream(filename);
 }
 
