@@ -12,6 +12,8 @@ Decompressor::Decompressor(std::string_view filename) {
 
 void Decompressor::InitTrie(const std::vector<size_t>& values,
                             const std::unordered_map<size_t, size_t>& cnt_len_code) {
+    trie_ = Trie();
+    trie_.SetRoot(new Trie::Node);
     size_t code = 0;
     size_t code_len = 1;
     size_t codes_with_current_len_left = cnt_len_code.at(1);
@@ -68,8 +70,6 @@ bool Decompressor::DecompressNextFile() {
     std::unordered_map<size_t, size_t> cnt_len_code;
     CountCodeLens(symbols_count, cnt_len_code);
 
-    trie_ = Trie();
-    trie_.SetRoot(new Trie::Node);
     InitTrie(values, cnt_len_code);
 
     std::string filename = RetrieveFilename();
