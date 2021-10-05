@@ -7,6 +7,7 @@
 
 class Reader {
 public:
+    Reader() = default;
     explicit Reader(std::istream& is);
     explicit Reader(std::string_view filename);
 

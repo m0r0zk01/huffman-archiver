@@ -5,6 +5,7 @@
 template <typename T>
 class PriorityQueue {
 public:
+    PriorityQueue() {}
     explicit PriorityQueue(const std::vector<T>& elements) {
         for (const auto& element : elements) {
             Insert(element);
@@ -16,7 +17,7 @@ public:
         SiftUp();
     }
 
-    T& GetFront() {
+    T& PeekFront() {
         if (Empty()) {
             throw "Trying to get element from empty priority queue";
         }
