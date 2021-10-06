@@ -55,7 +55,7 @@ std::string Decompressor::RetrieveFilename() {
     return result;
 }
 
-bool Decompressor::DecompressNextFile() {
+void Decompressor::RetrieveCodeInfo() {
     size_t symbols_count = reader_->GetNBit(9);
     std::vector<size_t> values;
     for (size_t i = 0; i < symbols_count; ++i) {
@@ -66,6 +66,10 @@ bool Decompressor::DecompressNextFile() {
     CountCodeLens(symbols_count, cnt_len_code);
 
     trie_ = RetrieveTrie(values, cnt_len_code);
+}
+
+bool Decompressor::DecompressNextFile() {
+    RetrieveCodeInfo();
 
     std::string filename = RetrieveFilename();
     writer_->SetOutputStream(filename);

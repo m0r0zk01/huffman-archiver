@@ -15,6 +15,7 @@ private:
     Trie RetrieveTrie(const std::vector<size_t>& values,
                       const std::unordered_map<size_t, size_t>& cnt_len_code);
     void CountCodeLens(size_t symbols_count, std::unordered_map<size_t, size_t>& cnt_len_code);
+    void RetrieveCodeInfo();
     size_t GetNextSymbol();
     std::string RetrieveFilename();
 
