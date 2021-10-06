@@ -77,7 +77,6 @@ bool Decompressor::DecompressNextFile() {
         writer_->WriteNBits(symbol, 8);
         symbol = GetNextSymbol();
     }
-    std::cout << '\n';
     writer_->End();
     return symbol == ONE_MORE_FILE;
 }
