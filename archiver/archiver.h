@@ -16,36 +16,11 @@ public:
     const uint ARCHIVE_END = 258;
 
 protected:
-    Archiver(Reader* reader, Writer* writer) {
-        if (reader) {
-            ChangeReader(reader);
-        } else {
-            reader_ = new Reader;
-        }
-        if (writer) {
-            ChangeWriter(writer);
-        } else {
-            writer_ = new Writer;
-        }
-    }
-    ~Archiver() {
-        if (is_reader_dynamically_allocated) {
-            delete reader_;
-        }
-        if (is_writer_dynamically_allocated) {
-            delete writer_;
-        }
-    }
+    Archiver(Reader* reader, Writer* writer);
+    ~Archiver();
 
-    void ChangeReader(Reader* reader) {
-        reader_ = reader;
-        is_reader_dynamically_allocated = false;
-    }
-
-    void ChangeWriter(Writer* writer) {
-        writer_ = writer;
-        is_writer_dynamically_allocated = false;
-    }
+    void ChangeReader(Reader* reader);
+    void ChangeWriter(Writer* writer);
 
     Reader* reader_ = nullptr;
     bool is_reader_dynamically_allocated = true;
