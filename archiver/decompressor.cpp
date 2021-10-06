@@ -7,7 +7,7 @@ Decompressor::Decompressor(Reader* reader) : Archiver(reader, new Writer) {}
 void Decompressor::InitTrie(const std::vector<size_t>& values,
                             const std::unordered_map<size_t, size_t>& cnt_len_code) {
     trie_ = Trie();
-    trie_.SetRoot(new Trie::Node);
+    trie_.SetRoot(std::make_shared<Trie::Node>());
     size_t code = 0;
     size_t code_len = 1;
     size_t codes_with_current_len_left = cnt_len_code.at(1);
@@ -36,7 +36,7 @@ void Decompressor::CountCodeLens(size_t symbols_count, std::unordered_map<size_t
 }
 
 size_t Decompressor::GetNextSymbol() {
-    Trie::Node* node = trie_.GetRoot();
+    Trie::NodePtr node = trie_.GetRoot();
     while (!node->is_leaf) {
         bool bit = reader_->GetNextBit();
         node = bit ? node->_1 : node->_0;

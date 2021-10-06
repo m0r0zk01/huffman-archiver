@@ -3,30 +3,27 @@
 
 class Trie {
 public:
+    struct Node;
+    using NodePtr = std::shared_ptr<Node>;
     struct Node {
         size_t value = 0;
         bool is_leaf = false;
-        std::unique_ptr<Node> _0 = nullptr, _1 = nullptr;
+        NodePtr _0 = nullptr, _1 = nullptr;
 
-        Node(size_t value, bool is_leaf, std::unique_ptr<Node> _0, std::unique_ptr<Node> _1);
+        Node() = default;
+        Node(size_t value, bool is_leaf, NodePtr _0, NodePtr _1);
     };
 
-    ~Trie();
+    NodePtr CreateNode(size_t value, bool is_leaf, NodePtr _0 = nullptr, NodePtr _1 = nullptr);
+    void SetRoot(NodePtr root);
+    void AddCode(size_t value, size_t code, size_t code_len, NodePtr node = nullptr);
 
-    std::unique_ptr<Node> InsertNode(size_t value, bool is_leaf,
-                                     std::unique_ptr<Node> _0 = nullptr,
-                                     std::unique_ptr<Node> _1 = nullptr);
-
-    void SetRoot(Node* root);
-    void AddCode(size_t value, size_t code, size_t code_len, Node* node = nullptr);
-
-    Node* GetRoot();
+    NodePtr GetRoot();
 
     std::vector<std::pair<size_t, size_t>> RetrieveCodeSizes();
 
 private:
-    void DeleteNode(Node* node);
-    void RetrieveCodeSizeDFS(std::vector<std::pair<size_t, size_t>>& result, Node* cur_node, size_t cur_code_len);
+    void RetrieveCodeSizeDFS(std::vector<std::pair<size_t, size_t>>& result, NodePtr cur_node, size_t cur_code_len);
 
-    Node* root_;
+    NodePtr root_;
 };

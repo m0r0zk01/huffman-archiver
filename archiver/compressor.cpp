@@ -50,17 +50,15 @@ void Compressor::AddFile(Reader* reader) {
         cnt_bytes[c]++;
     }
 
-    PriorityQueue<std::pair<size_t, std::unique_ptr<Trie::Node>>> pq;
+    PriorityQueue<std::pair<size_t, std::shared_ptr<Trie::Node>>> pq;
     Trie trie;
     size_t symbols_count = cnt_bytes.size();
     for (const auto& [byte, cnt] : cnt_bytes) {
-        std::unique_ptr<Trie::Node> node_ptr = trie.InsertNode(byte, true);
-        std::pair<size_t, std::unique_ptr<Trie::Node>> to_be_inserted = std::make_pair(cnt, std::move(node_ptr));
-        pq.Insert(std::move(to_be_inserted));
+        pq.Insert({cnt, trie.CreateNode(byte, true)});
     }
     while (pq.Size() > 1) {
         auto v1 = pq.PopFront(), v2 = pq.PopFront();
-        pq.Insert({v1.first + v2.first, trie.InsertNode(0, false, v1.second, v2.second)});
+        pq.Insert({v1.first + v2.first, trie.CreateNode(0, false, v1.second, v2.second)});
     }
     trie.SetRoot(pq.PopFront().second);
 
