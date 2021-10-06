@@ -12,8 +12,13 @@ public:
         }
     }
 
-    void Insert(const T& insert_value) {
+    void Insert(T& insert_value) {
         priority_queue_.push_back(insert_value);
+        SiftUp();
+    }
+
+    void Insert(T&& insert_value) {
+        priority_queue_.push_back(std::forward<T>(insert_value));
         SiftUp();
     }
 
@@ -25,7 +30,7 @@ public:
         return priority_queue_.front();
     }
 
-    T PopFront() {
+    T&& PopFront() {
         if (Empty()) {
             throw "Trying to pop element from empty priority queue";
         }
@@ -34,7 +39,7 @@ public:
         std::swap(priority_queue_.front(), priority_queue_.back());
         priority_queue_.pop_back();
         SiftDown();
-        return res;
+        return std::forward<T&&>(res);
     }
 
     inline size_t Size() const {

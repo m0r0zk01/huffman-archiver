@@ -4,8 +4,16 @@ Trie::~Trie() {
     DeleteNode(root_);
 }
 
-Trie::Node* Trie::InsertNode(size_t value, bool is_leaf, Node* _0, Node* _1) {
-    return new Node{.value=value, .is_leaf=is_leaf, ._0=_0, ._1=_1};
+Trie::Node::Node(size_t value, bool is_leaf, std::unique_ptr<Node> _0, std::unique_ptr<Node> _1) :
+      value(value),
+      is_leaf(is_leaf),
+      _0(std::move(_0)),
+      _1(std::move(_1)) {}
+
+std::unique_ptr<Trie::Node> Trie::InsertNode(size_t value, bool is_leaf,
+                                             std::unique_ptr<Trie::Node> _0,
+                                             std::unique_ptr<Trie::Node> _1) {
+    return std::make_unique<Trie::Node>(value, is_leaf, std::move(_0), std::move(_1));
 }
 
 void Trie::AddCode(size_t value, size_t code, size_t code_len, Node* node) {
@@ -56,4 +64,3 @@ void Trie::DeleteNode(Trie::Node* node) {
     DeleteNode(node->_1);
     delete node;
 }
-
