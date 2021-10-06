@@ -69,18 +69,21 @@ void Decompressor::RetrieveCodeInfo() {
 }
 
 bool Decompressor::DecompressNextFile() {
+    std::cout << "HERE\n";
     RetrieveCodeInfo();
-
+    std::cout << "HERE\n";
     std::string filename = RetrieveFilename();
     writer_->SetOutputStream(filename);
-
+    std::cout << "HERE\n";
     size_t symbol = GetNextSymbol();
+    std::cout << "HERE\n";
     while (symbol != ONE_MORE_FILE && symbol != ARCHIVE_END) {
+        std::cout << (unsigned char)symbol;
         writer_->WriteNBits(symbol, 8);
         symbol = GetNextSymbol();
     }
+    std::cout << '\n';
     writer_->End();
-
     return symbol == ONE_MORE_FILE;
 }
 
