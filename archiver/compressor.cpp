@@ -61,6 +61,16 @@ std::unordered_map<size_t, size_t> Compressor::BuildBytesFrequencyMap() {
     return cnt_bytes;
 }
 
+void Compressor::EncodeFileAndWriteToArchive() {
+    reader_->Clear();
+    reader_->Seekg(0);
+
+    while (!reader_->ReachedEOF()) {
+        unsigned char byte = reader_->GetNBit(8);
+        writer_->WriteNBits(code_table_[byte].first, code_table_[byte].second);
+    }
+}
+
 void Compressor::AddFile(Reader* reader) {
     if (files_added_) {
         writer_->WriteNBits(code_table_[ONE_MORE_FILE].first, code_table_[ONE_MORE_FILE].second);
@@ -86,13 +96,7 @@ void Compressor::AddFile(Reader* reader) {
     EncodeFileName();
     writer_->WriteNBits(code_table_[FILENAME_END].first, code_table_[FILENAME_END].second);
 
-    reader_->Clear();
-    reader_->Seekg(0);
-
-    while (!reader_->ReachedEOF()) {
-        unsigned char byte = reader_->GetNBit(8);
-        writer_->WriteNBits(code_table_[byte].first, code_table_[byte].second);
-    }
+    EncodeFileAndWriteToArchive();
 
     files_added_++;
 }

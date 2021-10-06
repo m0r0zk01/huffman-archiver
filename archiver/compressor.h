@@ -18,6 +18,7 @@ private:
                               std::unordered_map<size_t, size_t>& cnt_len_code);
     Trie BuildTrie(std::unordered_map<size_t, size_t>& cnt_bytes);
     std::unordered_map<size_t, size_t> BuildBytesFrequencyMap();
+    void EncodeFileAndWriteToArchive();
 
     size_t files_added_ = 0;
 
