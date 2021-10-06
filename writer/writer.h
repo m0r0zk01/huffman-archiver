@@ -19,7 +19,7 @@ public:
     void End();
 
     void SetOutputStream(std::ostream& os);
-    void SetOutputStream(std::string_view filename);
+    void SetOutputStream(const std::string& filename);
 
     std::ostream* output_stream_ = nullptr;
 

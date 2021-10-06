@@ -58,12 +58,16 @@ void Writer::SetOutputStream(std::ostream& os) {
     }
     output_stream_ = &os;
     has_stream_ownership_ = false;
+    bits_left_ = CHAR_BIT;
+    last_byte_ = 0;
 }
 
-void Writer::SetOutputStream(std::string_view filename) {
+void Writer::SetOutputStream(const std::string& filename) {
     if (has_stream_ownership_) {
         delete output_stream_;
     }
-    output_stream_ = new std::ofstream(filename.data());
+    output_stream_ = new std::ofstream(filename);
     has_stream_ownership_ = true;
+    bits_left_ = CHAR_BIT;
+    last_byte_ = 0;
 }
