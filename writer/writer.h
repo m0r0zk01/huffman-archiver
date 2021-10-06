@@ -21,8 +21,10 @@ public:
     void SetOutputStream(std::ostream& os);
     void SetOutputStream(std::string_view filename);
 
-private:
     std::ostream* output_stream_ = nullptr;
+
+private:
+//    std::ostream* output_stream_ = nullptr;
     bool has_stream_ownership_ = false;
     size_t bits_left_ = CHAR_BIT;
     unsigned char last_byte_ = 0;

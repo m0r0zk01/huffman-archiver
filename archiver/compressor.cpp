@@ -39,7 +39,7 @@ void Compressor::AddFile(Reader* reader) {
         writer_->WriteNBits(code_table_[ONE_MORE_FILE].first, code_table_[ONE_MORE_FILE].second);
     }
 
-    reader_ = reader;
+    ChangeReader(reader);
     std::unordered_map<size_t, size_t> cnt_bytes{{FILENAME_END, 1}, {ONE_MORE_FILE, 1}, {ARCHIVE_END, 1}};
     while (!reader_->ReachedEOF()) {
         unsigned char byte = reader_->GetNBit(8);

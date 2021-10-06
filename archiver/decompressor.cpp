@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 
-Decompressor::Decompressor(Reader* reader) : Archiver(reader, new Writer) {}
+Decompressor::Decompressor(Reader* reader) : Archiver(reader, nullptr) {}
 
 void Decompressor::InitTrie(const std::vector<size_t>& values,
                             const std::unordered_map<size_t, size_t>& cnt_len_code) {

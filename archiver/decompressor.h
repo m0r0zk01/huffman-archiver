@@ -1,10 +1,11 @@
 #pragma once
 
 #include "archiver.h"
-
+#include <iostream>
 class Decompressor : public Archiver {
 public:
     Decompressor() = delete;
+
     explicit Decompressor(Reader* reader);
 
     void Decompress();
