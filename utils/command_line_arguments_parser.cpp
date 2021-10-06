@@ -27,7 +27,7 @@ const std::vector<std::string>& Parser::GetValues(const std::string& arg) const 
 
 void Parser::AddRule(const std::string& arg, int _min, int _max) {
     if (_max == -1) {
-        _max = _min;
+        _max = INT32_MAX;
     }
     values_rules_[arg] = {_min, _max};
 }
