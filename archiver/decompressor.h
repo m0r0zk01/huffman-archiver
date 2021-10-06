@@ -12,8 +12,8 @@ public:
 
 private:
     bool DecompressNextFile();
-    void InitTrie(const std::vector<size_t>& values,
-                  const std::unordered_map<size_t, size_t>& cnt_len_code);
+    Trie RetrieveTrie(const std::vector<size_t>& values,
+                      const std::unordered_map<size_t, size_t>& cnt_len_code);
     void CountCodeLens(size_t symbols_count, std::unordered_map<size_t, size_t>& cnt_len_code);
     size_t GetNextSymbol();
     std::string RetrieveFilename();

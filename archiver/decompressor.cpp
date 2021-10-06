@@ -4,10 +4,10 @@
 
 Decompressor::Decompressor(Reader* reader) : Archiver(reader, nullptr) {}
 
-void Decompressor::InitTrie(const std::vector<size_t>& values,
-                            const std::unordered_map<size_t, size_t>& cnt_len_code) {
-    trie_ = Trie();
-    trie_.SetRoot(std::make_shared<Trie::Node>());
+Trie Decompressor::RetrieveTrie(const std::vector<size_t>& values,
+                                const std::unordered_map<size_t, size_t>& cnt_len_code) {
+    Trie trie;
+    trie.SetRoot(std::make_shared<Trie::Node>());
     size_t code = 0;
     size_t code_len = 1;
     size_t codes_with_current_len_left = cnt_len_code.at(1);
@@ -18,11 +18,12 @@ void Decompressor::InitTrie(const std::vector<size_t>& values,
             codes_with_current_len_left = cnt_len_code.at(code_len);
             code <<= 1;
         }
-        trie_.AddCode(values[codes_retrieved], code, code_len);
+        trie.AddCode(values[codes_retrieved], code, code_len);
         codes_with_current_len_left--;
         codes_retrieved++;
         code++;
     }
+    return trie;
 }
 
 void Decompressor::CountCodeLens(size_t symbols_count, std::unordered_map<size_t, size_t>& cnt_len_code) {
@@ -64,7 +65,7 @@ bool Decompressor::DecompressNextFile() {
     std::unordered_map<size_t, size_t> cnt_len_code;
     CountCodeLens(symbols_count, cnt_len_code);
 
-    InitTrie(values, cnt_len_code);
+    trie_ = RetrieveTrie(values, cnt_len_code);
 
     std::string filename = RetrieveFilename();
     writer_->SetOutputStream(filename);
