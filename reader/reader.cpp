@@ -1,3 +1,4 @@
+#include "../utils/extract_filename.h"
 #include "reader.h"
 
 #include <climits>
@@ -9,7 +10,7 @@ Reader::Reader(std::istream& is) :
 Reader::Reader(std::string_view filename) :
       input_stream_(new std::ifstream(filename.data())),
       has_stream_ownership_(true),
-      filename_(filename) {}
+      filename_(ExtractFilenameFromFilepath(filename)) {}
 
 Reader::~Reader() {
     if (has_stream_ownership_) {

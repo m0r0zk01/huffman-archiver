@@ -2,6 +2,7 @@
 #include "archiver/decompressor.h"
 #include "utils/command_line_arguments_parser.h"
 #include "utils/exception.h"
+#include "utils/extract_filename.h"
 
 #include <cstring>
 #include <iostream>
