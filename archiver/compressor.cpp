@@ -34,25 +34,9 @@ void Compressor::WriteCodeTableToFile(size_t max_symbol_code_size,
     }
 }
 
-void Compressor::AddFile(Reader* reader) {
-    if (files_added_) {
-        writer_->WriteNBits(code_table_[ONE_MORE_FILE].first, code_table_[ONE_MORE_FILE].second);
-    }
-
-    ChangeReader(reader);
-    std::unordered_map<size_t, size_t> cnt_bytes{{FILENAME_END, 1}, {ONE_MORE_FILE, 1}, {ARCHIVE_END, 1}};
-    while (!reader_->ReachedEOF()) {
-        unsigned char byte = reader_->GetNBit(8);
-        cnt_bytes[byte]++;
-    }
-
-    for (char c : reader_->GetFilename()) {
-        cnt_bytes[c]++;
-    }
-
-    PriorityQueue<std::pair<size_t, std::shared_ptr<Trie::Node>>> pq;
+Trie Compressor::BuildTrie(std::unordered_map<size_t, size_t>& cnt_bytes) {
     Trie trie;
-    size_t symbols_count = cnt_bytes.size();
+    PriorityQueue<std::pair<size_t, std::shared_ptr<Trie::Node>>> pq;
     for (const auto& [byte, cnt] : cnt_bytes) {
         pq.Insert({cnt, trie.CreateNode(byte, true)});
     }
@@ -61,6 +45,33 @@ void Compressor::AddFile(Reader* reader) {
         pq.Insert({v1.first + v2.first, trie.CreateNode(0, false, v1.second, v2.second)});
     }
     trie.SetRoot(pq.PopFront().second);
+
+    return trie;
+}
+
+std::unordered_map<size_t, size_t> Compressor::BuildBytesFrequencyMap() {
+    std::unordered_map<size_t, size_t> cnt_bytes{{FILENAME_END, 1}, {ONE_MORE_FILE, 1}, {ARCHIVE_END, 1}};
+    while (!reader_->ReachedEOF()) {
+        unsigned char byte = reader_->GetNBit(8);
+        cnt_bytes[byte]++;
+    }
+    for (char c : reader_->GetFilename()) {
+        cnt_bytes[c]++;
+    }
+    return cnt_bytes;
+}
+
+void Compressor::AddFile(Reader* reader) {
+    if (files_added_) {
+        writer_->WriteNBits(code_table_[ONE_MORE_FILE].first, code_table_[ONE_MORE_FILE].second);
+    }
+
+    ChangeReader(reader);
+
+    auto cnt_bytes = BuildBytesFrequencyMap();
+    size_t symbols_count = cnt_bytes.size();
+
+    Trie trie = BuildTrie(cnt_bytes);
 
     auto codes = trie.RetrieveCodeSizes();
     std::sort(codes.begin(), codes.end());
