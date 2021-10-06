@@ -5,10 +5,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall")
 
 add_executable(archiver.sh main.cpp)
 
-add_library(ARCHIVER archiver/compressor.cpp archiver/decompressor.cpp archiver/compressor.h archiver/decompressor.h archiver/tests/archiver_tests.cpp)
+add_library(ARCHIVER archiver/compressor.cpp archiver/decompressor.cpp archiver/compressor.h archiver/decompressor.h archiver/tests/archiver_tests.cpp utils/command_line_arguments_parser.cpp utils/command_line_arguments_parser.h utils/exception.h)
 add_library(READER reader/reader.cpp)
 add_library(WRITER writer/writer.cpp)
 add_library(TRIE trie/trie.cpp)
+add_subdirectory(./utils)
 
 target_link_libraries(archiver.sh ARCHIVER READER WRITER TRIE)
 
