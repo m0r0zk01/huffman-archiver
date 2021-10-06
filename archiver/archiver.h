@@ -10,17 +10,16 @@
 #include <unordered_map>
 
 class Archiver {
-public:
-    const uint FILENAME_END = 256;
-    const uint ONE_MORE_FILE = 257;
-    const uint ARCHIVE_END = 258;
-
 protected:
     Archiver(Reader* reader, Writer* writer);
     ~Archiver();
 
     void ChangeReader(Reader* reader);
     void ChangeWriter(Writer* writer);
+
+    const uint FILENAME_END = 256;
+    const uint ONE_MORE_FILE = 257;
+    const uint ARCHIVE_END = 258;
 
     Reader* reader_ = nullptr;
     bool is_reader_dynamically_allocated = true;
