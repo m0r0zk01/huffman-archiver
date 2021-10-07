@@ -66,6 +66,8 @@ void Reader::SetInputStream(std::istream& is) {
     input_stream_ = &is;
     has_stream_ownership_ = false;
     filename_.clear();
+    current_byte_ = 0;
+    bits_left_ = 0;
 }
 
 void Reader::SetInputStream(std::string_view filename) {
@@ -74,7 +76,9 @@ void Reader::SetInputStream(std::string_view filename) {
     }
     input_stream_ = new std::ifstream(filename.data());
     has_stream_ownership_ = true;
-    filename_ = filename;
+    filename_ = ExtractFilenameFromFilepath(filename);
+    current_byte_ = 0;
+    bits_left_ = 0;
 }
 
 std::string Reader::GetFilename() {

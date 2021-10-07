@@ -1,4 +1,5 @@
 #include "decompressor.h"
+#include "../utils/exception.h"
 
 #include <unordered_map>
 
@@ -13,8 +14,8 @@ Trie Decompressor::RetrieveTrie(const std::vector<size_t>& values,
     size_t codes_retrieved = 0;
     while (codes_retrieved != values.size()) {
         while (!codes_with_current_len_left) {
-            codes_with_current_len_left = cnt_len_code.at(code.Size());
             code.AddZeroes(1);
+            codes_with_current_len_left = cnt_len_code.at(code.Size());
         }
         trie.AddCode(values[codes_retrieved], code.GetData(), code.Size());
         codes_with_current_len_left--;
@@ -39,6 +40,9 @@ size_t Decompressor::GetNextSymbol() {
     while (!node->is_leaf) {
         bool bit = reader_->GetNextBit();
         node = bit ? node->_1 : node->_0;
+        if (!node) {
+            throw Exception("Corrupted archive!");
+        }
     }
     return node->value;
 }
