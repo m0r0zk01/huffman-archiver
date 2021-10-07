@@ -51,6 +51,14 @@ size_t Reader::GetNBit(size_t amount) {
     return result;
 }
 
+std::vector<bool> Reader::GetNBitAsVector(size_t amount) {
+    std::vector<bool> result;
+    for (size_t i = 0; i < amount; ++i) {
+        result.push_back(GetNextBit());
+    }
+    return result;
+}
+
 void Reader::SetInputStream(std::istream& is) {
     if (has_stream_ownership_) {
         delete input_stream_;

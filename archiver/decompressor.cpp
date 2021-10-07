@@ -8,20 +8,18 @@ Trie Decompressor::RetrieveTrie(const std::vector<size_t>& values,
                                 const std::unordered_map<size_t, size_t>& cnt_len_code) {
     Trie trie;
     trie.SetRoot(std::make_shared<Trie::Node>());
-    size_t code = 0;
-    size_t code_len = 1;
+    Code code;
     size_t codes_with_current_len_left = cnt_len_code.at(1);
     size_t codes_retrieved = 0;
     while (codes_retrieved != values.size()) {
         while (!codes_with_current_len_left) {
-            code_len++;
-            codes_with_current_len_left = cnt_len_code.at(code_len);
-            code <<= 1;
+            codes_with_current_len_left = cnt_len_code.at(code.Size());
+            code.AddZeroes(1);
         }
-        trie.AddCode(values[codes_retrieved], code, code_len);
+        trie.AddCode(values[codes_retrieved], code.GetData(), code.Size());
         codes_with_current_len_left--;
         codes_retrieved++;
-        code++;
+        code.Increment();
     }
     return trie;
 }
