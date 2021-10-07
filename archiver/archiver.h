@@ -11,6 +11,21 @@
 
 class Archiver {
 protected:
+    struct Code {
+        std::vector<bool> code = {0};
+
+        Code() = default;
+        Code(std::vector<bool>& bits);
+
+        void AddBit(bool bit);
+        void AddZeroes(size_t amount);
+        void Increment();
+
+        size_t Size() const;
+
+        std::vector<bool> GetData() const;
+    };
+
     Archiver(Reader* reader, Writer* writer);
     ~Archiver();
 

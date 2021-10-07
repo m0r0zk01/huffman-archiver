@@ -22,6 +22,6 @@ private:
 
     size_t files_added_ = 0;
 
-    using CodeTable = std::unordered_map<size_t, std::pair<size_t, size_t>>;
+    using CodeTable = std::unordered_map<size_t, Code>;
     CodeTable code_table_;
 };

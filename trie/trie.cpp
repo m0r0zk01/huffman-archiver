@@ -10,7 +10,7 @@ Trie::NodePtr Trie::CreateNode(size_t value, bool is_leaf, NodePtr _0, NodePtr _
     return std::make_shared<Trie::Node>(value, is_leaf, _0, _1);
 }
 
-void Trie::AddCode(size_t value, size_t code, size_t code_len, NodePtr node) {
+void Trie::AddCode(size_t value, std::vector<bool> code, size_t code_len, NodePtr node) {
     if (!code_len) {
         node->is_leaf = true;
         node->value = value;
@@ -19,12 +19,13 @@ void Trie::AddCode(size_t value, size_t code, size_t code_len, NodePtr node) {
     if (!node) {
         node = root_;
     }
-    bool cur_bit = (code >> (code_len - 1)) % 2;
+    bool cur_bit = code.front();
     NodePtr& son = cur_bit ? node->_1 : node->_0;
     if (!son) {
         son = std::make_shared<Node>();
     }
-    AddCode(value, code & ((1 << code_len) - 1), code_len - 1, son);
+    code.erase(code.begin());
+    AddCode(value, code, code_len - 1, son);
 }
 
 void Trie::SetRoot(NodePtr root) {

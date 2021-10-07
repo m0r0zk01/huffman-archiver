@@ -9,21 +9,20 @@ Compressor::Compressor(Writer* writer) : Archiver(nullptr, writer) {}
 
 void Compressor::EncodeFileName() {
     for (char c : reader_->GetFilename()) {
-        writer_->WriteNBits(code_table_[c].first, code_table_[c].second);
+        writer_->WriteBits(code_table_[c].GetData());
     }
+    writer_->WriteBits(code_table_[FILENAME_END].GetData());
 }
 
 void Compressor::MakeCanonicalHuffmanCode(const std::vector<std::pair<size_t, size_t>>& codes,
                                           std::unordered_map<size_t, size_t>& cnt_len_code) {
     code_table_.clear();
-    size_t code = 0;
-    size_t prev_len = codes[0].first;
+    Code code;
     for (const auto& [len, value] : codes) {
-        code <<= (len - prev_len);
+        code.AddZeroes(len - code.Size());
         cnt_len_code[len]++;
-        code_table_[value] = {code, len};
-        prev_len = len;
-        code++;
+        code_table_[value] = code;
+        code.Increment();
     }
 }
 
@@ -67,13 +66,13 @@ void Compressor::EncodeFileAndWriteToArchive() {
 
     while (!reader_->ReachedEOF()) {
         unsigned char byte = reader_->GetNBit(8);
-        writer_->WriteNBits(code_table_[byte].first, code_table_[byte].second);
+        writer_->WriteBits(code_table_[byte].GetData());
     }
 }
 
 void Compressor::AddFile(Reader* reader) {
     if (files_added_) {
-        writer_->WriteNBits(code_table_[ONE_MORE_FILE].first, code_table_[ONE_MORE_FILE].second);
+        writer_->WriteBits(code_table_[ONE_MORE_FILE].GetData());
     }
 
     ChangeReader(reader);
@@ -94,7 +93,6 @@ void Compressor::AddFile(Reader* reader) {
     }
     WriteCodeTableToFile(codes.back().first, cnt_len_code);
     EncodeFileName();
-    writer_->WriteNBits(code_table_[FILENAME_END].first, code_table_[FILENAME_END].second);
 
     EncodeFileAndWriteToArchive();
 
@@ -102,6 +100,6 @@ void Compressor::AddFile(Reader* reader) {
 }
 
 void Compressor::EndArchive() {
-    writer_->WriteNBits(code_table_[ARCHIVE_END].first, code_table_[ARCHIVE_END].second);
+    writer_->WriteBits(code_table_[ARCHIVE_END].GetData());
     writer_->End();
 }

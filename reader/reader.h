@@ -4,6 +4,7 @@
 #include <istream>
 #include <memory>
 #include <string_view>
+#include <vector>
 
 class Reader {
 public:
@@ -16,6 +17,7 @@ public:
     bool ReachedEOF();
     bool GetNextBit();
     size_t GetNBit(size_t amount);
+    std::vector<bool> GetNBitAsVector(size_t amount);
 
     void SetInputStream(std::istream& is);
     void SetInputStream(std::string_view filename);
