@@ -36,5 +36,6 @@ include_directories(${GTEST_INCLUDE_DIR})
 file(GLOB TEST_FILES "tests/*.cpp")
 add_executable("test_all" EXCLUDE_FROM_ALL ${TEST_FILES})
 target_link_libraries("test_all" gtest pthread ARCHIVER READER WRITER TRIE UTILS)
+add_dependencies("test_all" "test_all")
 add_test("test_all" "test_all")
 
