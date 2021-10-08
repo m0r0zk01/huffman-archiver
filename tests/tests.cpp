@@ -56,7 +56,6 @@ TEST(TestArchvier, ArchiveMultipleFiles) {
     }
     {
         for (const auto& filename : files) {
-            std::cout << filename << '\n';
             std::ifstream file1("./mock/sample/" + filename);
             std::ifstream file2("./" + filename);
 

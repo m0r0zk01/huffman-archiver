@@ -10,9 +10,9 @@
 void PrintHelp() {
     std::cout <<
         "Usage:\n"
-        "\t- archiver -c archive_name file1 [file2 ...] - заархивировать файлы fil1, file2, ... в архив archive_name\n"
-        "\t- archiver -d archive_name - разархивировать файлы из архива archive_name в текущую директорию\n"
-        "\t- archiver -h - вывести справку по использованию программы(данное сообщение)\n";
+        "\t- archiver -c archive_name file1 [file2 ...] - compress files <file1>, <file2>, ... and store them into archive <archive_name>\n"
+        "\t- archiver -d archive_name - decompress files from archive <archive_name> to current directory\n"
+        "\t- archiver -h - show help (this message)\n";
 }
 
 int main(int argc, char** argv) {
