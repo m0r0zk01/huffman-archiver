@@ -14,10 +14,9 @@ The program uses Huffman algorithm to compress/decompress given files
 
 - build.sh will generate archiver.sh executable
 - Usage:
-```
-./archiver.sh -c archive_name file1 [file2 ...] - compress files <file1>, <file2>, ... and store them into archive <archive_name>
-./archiver.sh -d archive_name - decompress files from archive <archive_name> to current directory
-./archiver.sh -h - print help (this message)
-```
+<br>`./archiver.sh -c archive_name file1 [file2 ...]` - compress files <file1>, <file2>, ... and store them into archive <archive_name>
+<br>`./archiver.sh -d archive_name` - decompress files from archive <archive_name> to current directory
+<br>`./archiver.sh -h` - show help (this message)
+
 
 ## Benchmarks
