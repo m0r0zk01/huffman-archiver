@@ -1,11 +1,11 @@
 #include "compressor.h"
 #include "../priority_queue/priority_queue.h"
+#include "../binary_trie/binary_trie.h"
 
 #include <algorithm>
-#include <bitset>
-#include <iostream>
+#include <climits>
 
-Compressor::Compressor(Writer* writer) : Archiver(nullptr, writer) {}
+Compressor::Compressor(std::unique_ptr<BaseWriter> writer) : writer_(std::move(writer)) {}
 
 void Compressor::EncodeFileName() {
     for (char c : reader_->GetFilename()) {
@@ -17,7 +17,7 @@ void Compressor::EncodeFileName() {
 void Compressor::MakeCanonicalHuffmanCode(const std::vector<std::pair<size_t, size_t>>& codes,
                                           std::unordered_map<size_t, size_t>& cnt_len_code) {
     code_table_.clear();
-    Code code;
+    HuffmanCode code;
     for (const auto& [len, value] : codes) {
         code.AddZeroes(len - code.Size());
         cnt_len_code[len]++;
@@ -29,13 +29,13 @@ void Compressor::MakeCanonicalHuffmanCode(const std::vector<std::pair<size_t, si
 void Compressor::WriteCodeTableToFile(size_t max_symbol_code_size,
                                       std::unordered_map<size_t, size_t>& cnt_len_code) {
     for (size_t code_size = 1; code_size <= max_symbol_code_size; ++code_size) {
-        writer_->WriteNBits(cnt_len_code[code_size], 9);
+        writer_->WriteBits(cnt_len_code[code_size], 9);
     }
 }
 
-Trie Compressor::BuildTrie(std::unordered_map<size_t, size_t>& cnt_bytes) {
-    Trie trie;
-    PriorityQueue<std::pair<size_t, std::shared_ptr<Trie::Node>>> pq;
+BinaryTrie Compressor::BuildTrie(std::unordered_map<size_t, size_t>& cnt_bytes) {
+    BinaryTrie trie;
+    PriorityQueue<std::pair<size_t, std::shared_ptr<BinaryTrie::Node>>> pq;
     for (const auto& [byte, cnt] : cnt_bytes) {
         pq.Insert({cnt, trie.CreateNode(byte, true)});
     }
@@ -51,45 +51,49 @@ Trie Compressor::BuildTrie(std::unordered_map<size_t, size_t>& cnt_bytes) {
 std::unordered_map<size_t, size_t> Compressor::BuildBytesFrequencyMap() {
     std::unordered_map<size_t, size_t> cnt_bytes{{FILENAME_END, 1}, {ONE_MORE_FILE, 1}, {ARCHIVE_END, 1}};
     while (!reader_->ReachedEOF()) {
-        unsigned char byte = reader_->GetNBit(8);
-        cnt_bytes[byte]++;
+        int64_t symbol = reader_->ReadBitsToInt(8);
+        cnt_bytes[symbol]++;
     }
     for (char c : reader_->GetFilename()) {
-        cnt_bytes[c]++;
+        int16_t result = 0;
+        int16_t pow2 = 1;
+        for (size_t i = 0; i < CHAR_BIT; ++i, pow2 <<= 1) {
+            result += ((c >> (CHAR_BIT - i - 1)) % 2) * pow2;
+        }
+        cnt_bytes[result]++;
     }
     return cnt_bytes;
 }
 
 void Compressor::EncodeFileAndWriteToArchive() {
-    reader_->Clear();
-    reader_->Seekg(0);
+    reader_->Reopen();
 
     while (!reader_->ReachedEOF()) {
-        unsigned char byte = reader_->GetNBit(8);
+        unsigned char byte = reader_->ReadBitsToInt(8);
         writer_->WriteBits(code_table_[byte].GetData());
     }
 }
 
-void Compressor::AddFile(Reader* reader) {
+void Compressor::AddFile(std::unique_ptr<BaseReader> reader) {
     if (files_added_) {
         writer_->WriteBits(code_table_[ONE_MORE_FILE].GetData());
     }
 
-    ChangeReader(reader);
+    reader_ = std::move(reader);
 
     auto cnt_bytes = BuildBytesFrequencyMap();
     size_t symbols_count = cnt_bytes.size();
 
-    Trie trie = BuildTrie(cnt_bytes);
+    BinaryTrie trie = BuildTrie(cnt_bytes);
 
     auto codes = trie.RetrieveCodeSizes();
     std::sort(codes.begin(), codes.end());
     std::unordered_map<size_t, size_t> cnt_len_code;
 
     MakeCanonicalHuffmanCode(codes, cnt_len_code);
-    writer_->WriteNBits(symbols_count, 9);
+    writer_->WriteBits(symbols_count, 9);
     for (const auto& [len, value] : codes) {
-        writer_->WriteNBits(value, 9);
+        writer_->WriteBits(value, 9);
     }
     WriteCodeTableToFile(codes.back().first, cnt_len_code);
     EncodeFileName();

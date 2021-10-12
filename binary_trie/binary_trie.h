@@ -1,7 +1,9 @@
+#pragma once
+
 #include <vector>
 #include <memory>
 
-class Trie {
+class BinaryTrie {
 public:
     struct Node;
     using NodePtr = std::shared_ptr<Node>;
@@ -14,11 +16,10 @@ public:
         Node(size_t value, bool is_leaf, NodePtr _0, NodePtr _1);
     };
 
+    NodePtr GetRoot();
     NodePtr CreateNode(size_t value, bool is_leaf, NodePtr _0 = nullptr, NodePtr _1 = nullptr);
     void SetRoot(NodePtr root);
     void AddCode(size_t value, std::vector<bool> code, size_t code_len, NodePtr node = nullptr);
-
-    NodePtr GetRoot();
 
     std::vector<std::pair<size_t, size_t>> RetrieveCodeSizes();
 

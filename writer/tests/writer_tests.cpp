@@ -1,11 +1,11 @@
-#include "../writer.h"
+#include "../file_writer.h"
 
 #include <gtest/gtest.h>
 #include <fstream>
 
 TEST(WriterTest, Test1) {
     std::ofstream out("./mock/test1.bin");
-    Writer writer(out);
+    FileWriter writer(out);
 
     writer.WriteBit(0);
     writer.WriteBit(1);

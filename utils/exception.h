@@ -1,7 +1,9 @@
-struct Exception : public std::exception
-{
+#include <string>
+#include <string_view>
+
+struct Exception : public std::exception {
     std::string s;
-    Exception(std::string s) : s(s) {}
+    Exception(const std::string_view s) : s(s) {}
     ~Exception() throw () {}
-    const char* what() const throw() { return s.c_str(); }
+    const char* what() const noexcept override { return s.c_str(); }
 };

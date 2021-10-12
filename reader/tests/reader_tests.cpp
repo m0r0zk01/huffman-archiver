@@ -1,22 +1,21 @@
-#include "../reader.h"
+#include "../file_reader.h"
 
 #include <gtest/gtest.h>
 #include <iostream>
 #include <fstream>
 
 TEST(ReaderTest, Test1) {
-    std::ifstream f("./mock/test1.bin", std::ios::binary);
-    Reader reader(f);
+    FileReader reader("./mock/test1.bin");
 
     ASSERT_FALSE(reader.ReachedEOF());
-    ASSERT_EQ(reader.GetNextBit(), 0);
-    ASSERT_EQ(reader.GetNextBit(), 1);
-    ASSERT_EQ(reader.GetNextBit(), 1);
-    ASSERT_EQ(reader.GetNextBit(), 0);
-    ASSERT_EQ(reader.GetNextBit(), 0);
-    ASSERT_EQ(reader.GetNextBit(), 0);
-    ASSERT_EQ(reader.GetNextBit(), 0);
-    ASSERT_EQ(reader.GetNextBit(), 1);
+    ASSERT_EQ(reader.ReadNextBit(), 0);
+    ASSERT_EQ(reader.ReadNextBit(), 1);
+    ASSERT_EQ(reader.ReadNextBit(), 1);
+    ASSERT_EQ(reader.ReadNextBit(), 0);
+    ASSERT_EQ(reader.ReadNextBit(), 0);
+    ASSERT_EQ(reader.ReadNextBit(), 0);
+    ASSERT_EQ(reader.ReadNextBit(), 0);
+    ASSERT_EQ(reader.ReadNextBit(), 1);
     ASSERT_TRUE(reader.ReachedEOF());
 }
 
