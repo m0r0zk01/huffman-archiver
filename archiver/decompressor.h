@@ -16,11 +16,11 @@ public:
 
 private:
     bool DecompressNextFile();
-    BinaryTrie RetrieveTrie(const std::vector<int16_t>& values,
-                            const std::unordered_map<int16_t, int16_t>& cnt_len_code);
-    void CountCodeLens(int16_t symbols_count, std::unordered_map<int16_t , int16_t>& cnt_len_code);
+    BinaryTrie RetrieveTrie(const std::vector<uint16_t>& values,
+                            const std::unordered_map<uint16_t, uint16_t>& cnt_len_code);
+    void CountCodeLens(uint16_t symbols_count, std::unordered_map<uint16_t , uint16_t>& cnt_len_code);
     void RetrieveCodeInfo();
-    int16_t GetNextSymbol();
+    uint16_t GetNextSymbol();
     std::string RetrieveFilename();
 
     BinaryTrie trie_;

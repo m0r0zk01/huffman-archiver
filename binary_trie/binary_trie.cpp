@@ -1,16 +1,16 @@
 #include "binary_trie.h"
 
-BinaryTrie::Node::Node(size_t value, bool is_leaf, NodePtr _0, NodePtr _1) :
+BinaryTrie::Node::Node(uint16_t value, bool is_leaf, NodePtr _0, NodePtr _1) :
       value(value),
       is_leaf(is_leaf),
       _0(_0),
       _1(_1) {}
 
-BinaryTrie::NodePtr BinaryTrie::CreateNode(size_t value, bool is_leaf, NodePtr _0, NodePtr _1) {
+BinaryTrie::NodePtr BinaryTrie::CreateNode(uint16_t value, bool is_leaf, NodePtr _0, NodePtr _1) {
     return std::make_shared<BinaryTrie::Node>(value, is_leaf, _0, _1);
 }
 
-void BinaryTrie::AddCode(size_t value, std::vector<bool> code, size_t code_len, NodePtr node) {
+void BinaryTrie::AddCode(uint16_t value, std::vector<bool> code, uint16_t code_len, NodePtr node) {
     if (!code_len) {
         node->is_leaf = true;
         node->value = value;
@@ -36,7 +36,7 @@ BinaryTrie::NodePtr BinaryTrie::GetRoot() {
     return root_;
 }
 
-void BinaryTrie::RetrieveCodeSizeDFS(std::vector<std::pair<size_t, size_t>>& result, NodePtr cur_node, size_t cur_code_len) {
+void BinaryTrie::RetrieveCodeSizeDFS(std::vector<std::pair<uint16_t, uint16_t>>& result, NodePtr cur_node, uint16_t cur_code_len) {
     if (cur_node->is_leaf) {
         result.push_back({cur_code_len, cur_node->value});
         return;
@@ -45,8 +45,8 @@ void BinaryTrie::RetrieveCodeSizeDFS(std::vector<std::pair<size_t, size_t>>& res
     RetrieveCodeSizeDFS(result, cur_node->_1, cur_code_len + 1);
 }
 
-std::vector<std::pair<size_t, size_t>> BinaryTrie::RetrieveCodeSizes() {
-    std::vector<std::pair<size_t, size_t>> result;
+std::vector<std::pair<uint16_t, uint16_t>> BinaryTrie::RetrieveCodeSizes() {
+    std::vector<std::pair<uint16_t, uint16_t>> result;
     RetrieveCodeSizeDFS(result, root_, 0);
     return result;
 }
