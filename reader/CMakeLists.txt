@@ -3,7 +3,7 @@ project(Reader)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall")
 
-add_library(lib_reader reader.cpp)
+add_library(lib_reader file_reader.cpp)
 
 # Setup testing
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/tests/mock DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)

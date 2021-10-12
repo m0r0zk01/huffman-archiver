@@ -1,6 +1,5 @@
 #include "extract_filename.h"
 
-#include <algorithm>
 #include <string>
 
 std::string ExtractFilenameFromFilepath(const std::string_view filepath) {

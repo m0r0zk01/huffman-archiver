@@ -8,7 +8,7 @@ add_executable(archiver.sh main.cpp)
 add_subdirectory(./reader/)
 add_subdirectory(./writer/)
 add_subdirectory(./archiver/)
-add_subdirectory(./trie/)
+add_subdirectory(binary_trie/)
 add_subdirectory(./utils/)
 add_subdirectory(./priority_queue)
 

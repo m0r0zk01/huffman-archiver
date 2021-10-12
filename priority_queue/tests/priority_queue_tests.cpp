@@ -11,11 +11,11 @@ TEST(PriorityQueueTest, TestSize) {
     pq.Insert({123, 123});
     pq.PopFront();
     ASSERT_EQ(pq.Size(), 2);
-    pq.GetFront();
+    pq.PeekFront();
     ASSERT_EQ(pq.Size(), 2);
     pq.PopFront();
     pq.PopFront();
-    ASSERT_ANY_THROW(pq.GetFront());
+    ASSERT_ANY_THROW(pq.PeekFront());
     ASSERT_ANY_THROW(pq.PopFront());
     ASSERT_TRUE(pq.Empty());
 }

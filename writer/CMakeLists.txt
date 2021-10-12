@@ -3,7 +3,7 @@ project(Writer)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall")
 
-add_library(lib_writer writer.cpp)
+add_library(lib_writer file_writer.cpp)
 
 # Setup testing
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/tests/mock DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
