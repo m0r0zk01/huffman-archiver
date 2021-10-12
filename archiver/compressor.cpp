@@ -9,7 +9,12 @@ Compressor::Compressor(std::unique_ptr<BaseWriter> writer) : writer_(std::move(w
 
 void Compressor::EncodeFileName() {
     for (char c : reader_->GetFilename()) {
-        writer_->WriteBits(code_table_[c].GetData());
+        int16_t result = 0;
+        int32_t pow2 = 1;
+        for (size_t i = 0; i < CHAR_BIT; ++i, pow2 <<= 1) {
+            result += ((c >> (CHAR_BIT - i - 1)) % 2) * pow2;
+        }
+        writer_->WriteBits(code_table_[result].GetData());
     }
     writer_->WriteBits(code_table_[FILENAME_END].GetData());
 }

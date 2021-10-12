@@ -49,13 +49,18 @@ int16_t Decompressor::GetNextSymbol() {
 }
 
 std::string Decompressor::RetrieveFilename() {
-    std::string result;
+    std::string filename;
     int16_t symbol = GetNextSymbol();
     while (symbol != FILENAME_END) {
-        result.push_back(symbol);
+        int16_t result = 0;
+        int32_t pow2 = 1;
+        for (size_t i = 0; i < CHAR_BIT; ++i, pow2 <<= 1) {
+            result += ((symbol >> (CHAR_BIT - i - 1)) % 2) * pow2;
+        }
+        filename.push_back(result);
         symbol = GetNextSymbol();
     }
-    return result;
+    return filename;
 }
 
 void Decompressor::RetrieveCodeInfo() {
