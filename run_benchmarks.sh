@@ -6,7 +6,7 @@ log_file='benchmarks/log.txt'
 rm $log_file
 
 for filename in ./benchmarks/*; do
-  echo "Processing $(basename "$filename")..."
+#  echo "Processing $(basename "$filename")..."
   initial_size=$(stat -c%s "$filename")
   initial_size=$((initial_size / 1024))
 
@@ -18,18 +18,16 @@ for filename in ./benchmarks/*; do
   final_size=$((final_size / 1024))
   percent=$(echo "scale=2; 100 * $final_size / $initial_size" | bc -l)
 
-  echo "It took $exec_time seconds"
-  echo "Size changed from $initial_size Kb to $final_size Kb ($percent% of initial size)"
-  echo ""
+  read -r -d '' log_text << EOM
+file | $(basename "$filename")
+time | $exec_time s
+initial size | $initial_size Kb
+% of initial size | $percent%
+EOM
 
-  {
-  echo "file~$(basename "$filename")"
-  echo "time~$exec_time s";
-  echo "initial size~$initial_size Kb";
-  echo "final size~$final_size Kb";
-  echo "% of initial size~$percent%";
-  echo "~";
-  } | column -t -s'~' >> $log_file;
+  log_text=$(echo "$log_text" | column -t -s'|')  ;
+  echo -e "$log_text \n";
+  echo -e "$log_text \n" >> $log_file;
 done
 rm arch
 echo -e "\033[1m\033[0;36m Log written to benchmarks/log.txt \033[0m \n"
