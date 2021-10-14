@@ -20,3 +20,22 @@ The program uses Huffman algorithm to compress/decompress given files
 
 
 ## Benchmarks
+
+- Benchmark files are located in [`benchmarks`](/benchmarks) folder
+- You can add there your own files
+- Run benchmarks with `run_benchmarks.sh` script
+
+My files benchmark ([log.txt](./benchmarks/log.txt)):
+```
+file               WarAndPeace.txt
+time               0.383 s
+initial size       4067 Kb
+final size         1141 Kb
+% of initial size  28.05%
+
+file               skull.jpg
+time               0.015 s
+initial size       81 Kb
+final size         80 Kb
+% of initial size  98.76%
+```

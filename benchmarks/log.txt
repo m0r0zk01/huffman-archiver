@@ -1,0 +1,12 @@
+file               WarAndPeace.txt
+time               0.383 s
+initial size       4067 Kb
+final size         1141 Kb
+% of initial size  28.05%
+
+file               skull.jpg
+time               0.015 s
+initial size       81 Kb
+final size         80 Kb
+% of initial size  98.76%
+

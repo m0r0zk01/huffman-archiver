@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 2.8)
 project(archiver)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -O3")
 
 add_executable(archiver.sh main.cpp)
 
+add_subdirectory(./utils/)
 add_subdirectory(./reader/)
 add_subdirectory(./writer/)
 add_subdirectory(./archiver/)
 add_subdirectory(./binary_trie/)
-add_subdirectory(./utils/)
 
 target_link_libraries(archiver.sh lib_archiver lib_reader lib_writer lib_binary_trie lib_utils)
 
