@@ -7,7 +7,8 @@ The program uses Huffman algorithm to compress/decompress given files
 
 ## Installation
 
-- Clone the repository
+- Clone the repository:<br>
+`git clone https://github.com/m0r0zk01/huffman-archiver.git`
 - Run build.sh script (make sure CMake is installed on your system)
 
 ## Usage
