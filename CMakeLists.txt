@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.11)
 project(archiver)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -O3")
@@ -39,6 +39,3 @@ add_test("test_priority_queue" "./test_priority_queue")
 add_executable("test_archiver" ${TESTS_FOLDER}/archiver_tests.cpp)
 target_link_libraries("test_archiver" gtest pthread lib_archiver lib_utils lib_reader lib_writer lib_binary_trie)
 add_test("test_archiver" "./test_archiver")
-
-add_custom_target(test_all COMMAND test_archiver COMMAND test_priority_queue COMMAND test_writer COMMAND test_reader)
-add_test("test_all" "./test_all")
