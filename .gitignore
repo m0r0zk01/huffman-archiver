@@ -24,3 +24,4 @@ build_asan
 *.pdf
 compile_commands.json
 archiver.sh
+tests/mock/sample/watermelon.mp3
