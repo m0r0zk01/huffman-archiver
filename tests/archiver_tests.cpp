@@ -1,22 +1,24 @@
 #include "../archiver/compressor.h"
 #include "../archiver/decompressor.h"
+#include "../reader/file_reader.h"
+#include "../writer/file_writer.h"
+#include <gtest/gtest.h>
 
 #include <cstdio>
 #include <iostream>
-
-#include <gtest/gtest.h>
+#include <memory>
 
 TEST(TestArchvier, ArchiveSingleFile) {
     {
-        Reader reader("./mock/sample/watermelon.mp3");
-        Writer writer("./mock/arch");
-        Compressor compressor(&writer);
-        compressor.AddFile(&reader);
+        std::unique_ptr<BaseReader> reader = std::make_unique<FileReader>("./mock/sample/watermelon.mp3");
+        std::unique_ptr<BaseWriter> writer = std::make_unique<FileWriter>("./mock/arch");
+        Compressor compressor(std::move(writer));
+        compressor.AddFile(std::move(reader));
         compressor.EndArchive();
     }
     {
-        Reader reader("./mock/arch");
-        Decompressor decompressor(&reader);
+        std::unique_ptr<BaseReader> reader = std::make_unique<FileReader>("./mock/arch");
+        Decompressor decompressor(std::move(reader));
         decompressor.Decompress();
     }
     {
@@ -38,20 +40,19 @@ TEST(TestArchvier, ArchiveSingleFile) {
 TEST(TestArchvier, ArchiveMultipleFiles) {
     std::vector<std::string> files {"amogus.txt", "test.pdf", "a", "asd.png"};
     {
-        Writer writer("./mock/arch");
-        Compressor compressor(&writer);
+        std::unique_ptr<BaseWriter> writer = std::make_unique<FileWriter>("./mock/arch");
+        Compressor compressor(std::move(writer));
 
-        Reader reader;
         for (const auto& filename : files) {
-            reader.SetInputStream("./mock/sample/" + filename);
-            compressor.AddFile(&reader);
+            std::unique_ptr<BaseReader> reader = std::make_unique<FileReader>("./mock/sample/" + filename);
+            compressor.AddFile(std::move(reader));
         }
 
         compressor.EndArchive();
     }
     {
-        Reader reader("./mock/arch");
-        Decompressor decompressor(&reader);
+        std::unique_ptr<BaseReader> reader = std::make_unique<FileReader>("./mock/arch");
+        Decompressor decompressor(std::move(reader));
         decompressor.Decompress();
     }
     {
