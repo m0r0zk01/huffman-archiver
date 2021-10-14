@@ -23,7 +23,7 @@ The program uses Huffman algorithm to compress/decompress given files
 
 - Benchmark files are located in [`benchmarks`](/benchmarks) folder
 - You can add there your own files
-- Run benchmarks with `run_benchmarks.sh` script
+- Run benchmarks with [`run_benchmarks.sh`](run_benchmarks.sh) script
 
 My files benchmark ([log.txt](./benchmarks/log.txt)):
 ```
